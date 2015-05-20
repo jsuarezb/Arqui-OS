@@ -3,6 +3,7 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include <console.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -94,5 +95,15 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
+	
+	_clear();
+
+	int x;
+	for (x = 0; x < 60; x++)
+		_writeChar(x % 10 + '0');
+
+	_newLine();
+	_write("Hello world");
+
 	return 0;
 }
