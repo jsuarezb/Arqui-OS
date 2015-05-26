@@ -3,7 +3,8 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
-#include <console.h>
+#include <video.h>
+#include "include/defines.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -96,14 +97,14 @@ int main()
 
 	ncPrint("[Finished]");
 	
-	_clear();
+	_vClear();
 
 	int x;
-	for (x = 0; x < 60; x++)
-		_writeChar(x % 10 + '0');
+	for (x = 0; x < 80; x++)
+		_vWrite('#');
 
-	_newLine();
-	_write("Hello world");
+	_vNewLine();
 
 	return 0;
 }
+
