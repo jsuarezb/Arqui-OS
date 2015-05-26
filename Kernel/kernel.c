@@ -3,7 +3,8 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
-#include <console.h>
+#include <video.h>
+#include "include/defines.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -14,8 +15,8 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void * const sampleCodeModuleAddress = (void*)0x400000;
-static void * const sampleDataModuleAddress = (void*)0x500000;
+static void * const sampleCodeModuleAddress = (void*)0x40000;
+static void * const sampleDataModuleAddress = (void*)0x50000;
 
 typedef int (*EntryPoint)();
 
@@ -96,14 +97,14 @@ int main()
 
 	ncPrint("[Finished]");
 	
-	_clear();
+	_vClear();
 
 	int x;
-	for (x = 0; x < 60; x++)
-		_writeChar(x % 10 + '0');
+	for (x = 0; x < 80; x++)
+		_vWrite('#');
 
-	_newLine();
-	_write("Hello world");
+	_vNewLine();
 
 	return 0;
 }
+
