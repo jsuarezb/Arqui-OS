@@ -12,10 +12,10 @@ SECTIONS
 	{
 		*(.data*)
 	}
-	.bss ALIGN(0x1000) :
-	{
-		bss = .
-		*(.bss*)
-	}
-	endOfBinary = .
+ 	.bss ALIGN(0x1000) :
+ 	{
+		bss = .;
+ 		*(.bss*)
+ 	}
+	endOfBinary = .;
 }
