@@ -1,3 +1,6 @@
+#ifndef _VIDEO_H_
+#define _VIDEO_H_ 
+
 #define VIDEO_START 0xB8000
 #define VIDEO_WIDTH 80
 #define VIDEO_HEIGHT 25
@@ -15,3 +18,5 @@ void _vDelete();
 void _vClearLine();
 
 void _vNewLine();
+
+#endif

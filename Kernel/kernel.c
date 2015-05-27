@@ -5,6 +5,7 @@
 #include <naiveConsole.h>
 #include <video.h>
 #include "include/defines.h"
+#include "include/idt.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -17,6 +18,11 @@ static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
+
+// IDT 
+
+static struct IDTEntry* idt = (struct IDTEntry*) 0x0;
+static struct IDTR idtr;
 
 typedef int (*EntryPoint)();
 
@@ -100,7 +106,7 @@ int main()
 	_vClear();
 
 	int x;
-	for (x = 0; x < 80; x++)
+	for (x = 0; x < 81; x++)
 		_vWrite('#');
 
 	_vNewLine();
@@ -108,3 +114,23 @@ int main()
 	return 0;
 }
 
+// ** IDT
+
+void IDTinitialize()
+{
+	setupIDTentry(0x20, 0x08, (uint64_t) &_irq00handler, 0x80 | 0x0e);
+}
+
+
+void setupIDTentry(int index, uint16_t selector, uint64_t offset, uint8_t access)
+{
+	idt[index].lowBits = offset & 0xFFFF;
+	idt[index].midBits = (offset >> 16) & 0xFFFF;
+	idt[index].highBits = (offset >> 32) & 0xFFFFFFFF;
+
+	idt[index].selector = selector;
+	idt[index].typeAttr = access;
+
+	idt[index].zero1 = 0;
+	idt[index].zero2 = 0;
+}
