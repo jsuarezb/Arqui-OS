@@ -21,7 +21,7 @@ static void * const sampleDataModuleAddress = (void*)0x500000;
 
 // IDT 
 
-static struct IDTEntry* idt = (struct IDTEntry*) 0x0;
+static struct IDTEntry* idt = (struct IDTEntry*) 0x0000;
 static struct IDTR idtr;
 
 typedef int (*EntryPoint)();
@@ -106,19 +106,28 @@ int main()
 	_vClear();
 
 	int x;
-	for (x = 0; x < 81; x++)
+	for (x = 0; x < 80; x++)
 		_vWrite('#');
 
-	_vNewLine();
+	IDTinitialize();
+
+	while(1) {
+
+	}
 
 	return 0;
 }
 
-// ** IDT
-
 void IDTinitialize()
 {
-	setupIDTentry(0x20, 0x08, (uint64_t) &_irq00handler, 0x80 | 0x0e);
+	int i;
+
+	setupIDTentry(0x20, 0x08, &_irq00handler, 0x8E);
+
+	picMasterMask(0xFE); 
+	picSlaveMask(0xFF);
+
+	_sti();
 }
 
 

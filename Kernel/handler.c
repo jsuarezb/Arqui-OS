@@ -1,9 +1,6 @@
 #include <stdint.h>
 #include "include/video.h"
 
-
-static int timer = 0;
-
 void irqDispatcher(uint64_t irq)
 {
 	switch(irq) {
@@ -11,11 +8,14 @@ void irqDispatcher(uint64_t irq)
 			timerTick();
 			break;
 	}
+
 	return;
 }
 
 void timerTick()
 {
-	timer ++;
-	_vWrite('_');
+	int i;
+	
+	_vPrint(" Hello ");
+	_vPrintError("World");
 }

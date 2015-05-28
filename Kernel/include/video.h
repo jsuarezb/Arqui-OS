@@ -1,21 +1,21 @@
 #ifndef _VIDEO_H_
 #define _VIDEO_H_ 
 
-#define VIDEO_START 0xB8000
-#define VIDEO_WIDTH 80
-#define VIDEO_HEIGHT 25
-
-#define DEFAULT_CONSOLE_FORMAT 0x0F
-
-// _ → kernel
+// _v → video driver
 
 void _vClear();
 
 void _vWrite(char c);
 
+void _vWriteError(char c);
+
+void _vPrint(char* str);
+
+void _vPrintError(char* str);
+
 void _vDelete();
 
-void _vClearLine();
+void _vMoveUp();
 
 void _vNewLine();
 
