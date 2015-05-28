@@ -2,7 +2,8 @@
  * Video driver
  */
 
-#include <video.h>
+#include "include/defines.h"
+#include "include/video.h"
 #define VIDEO_SIZE width * height
 
 static char * const video = (char*) VIDEO_START;
@@ -21,6 +22,14 @@ void _vClear() {
 }
 
 void _vWrite(char c) {
+	_vWriteFormat(c, DEFAULT_CONSOLE_FORMAT);
+}
+
+void _vWriteError(char c) {
+	_vWriteFormat(c, ERROR_CONSOLE_FORMAT);
+}
+
+void _vWriteFormat(char c, char format) {
 	// Filter special characters
 	switch (c) {
 		case '\n':
@@ -31,14 +40,22 @@ void _vWrite(char c) {
 			break;
 		default:
 			video[vOffset] = c;
-			video[vOffset + 1] = DEFAULT_CONSOLE_FORMAT;
+			video[vOffset + 1] = format;
 			vOffset += 2;
 			break;
 	}
 
 	if (vOffset > 2 * VIDEO_SIZE)
-		_vClearLine();
+		_vMoveUp();
 	
+}
+
+void _vPrint(char* c) {
+	while(*c) _vWrite(*c++);
+}
+
+void _vPrintError(char* c) {
+	while(*c) _vWriteError(*c++);
 }
 
 void _vDelete() {
@@ -49,14 +66,14 @@ void _vDelete() {
 	}
 }
 
-void _vClearLine() {
-	int x;
+void _vMoveUp() {
+	int i;
 
-	for (x = 0; x < 2 * (VIDEO_SIZE - width); x++) // copy char and format
-		video[x] = video[x + width];
+	for (i = 0; i < 2 * (VIDEO_SIZE - width); i++)
+		video[i] = video[i + 2 * width];
 
-	for (; x < 2 * VIDEO_SIZE; x++)
-		video[x] = (x % 2 == 0) ? ' ' : DEFAULT_CONSOLE_FORMAT;
+	for (; i < 2 * VIDEO_SIZE; i++)
+		video[i] = i % 2 == 0 ? ' ' : DEFAULT_CONSOLE_FORMAT;
 
 	vOffset -= 2 * width;
 }
