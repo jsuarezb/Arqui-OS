@@ -9,6 +9,8 @@ void _vWrite(char c);
 
 void _vWriteError(char c);
 
+void _vWriteFormat(char c, char format);
+
 void _vPrint(char* str);
 
 void _vPrintError(char* str);

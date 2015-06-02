@@ -111,18 +111,15 @@ int main()
 
 	IDTinitialize();
 
-	while(1) {
-
-	}
+	while(1) { }
 
 	return 0;
 }
 
 void IDTinitialize()
 {
-	int i;
-
 	setupIDTentry(0x20, 0x08, &_irq00handler, 0x8E);
+	setupIDTentry(0x21, 0x08, &_irq01handler, 0x8E);
 
 	picMasterMask(0xFE); 
 	picSlaveMask(0xFF);

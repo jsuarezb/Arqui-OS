@@ -1,21 +1,13 @@
 #include <stdint.h>
-#include "include/video.h"
-
-void irqDispatcher(uint64_t irq)
-{
-	switch(irq) {
-		case 0:
-			timerTick();
-			break;
-	}
-
-	return;
-}
+#include "include/keyboard.h"
 
 void timerTick()
 {
-	int i;
-	
-	_vPrint(" Hello ");
-	_vPrintError("World");
+
+}
+
+void keyboardHandler(unsigned char c)
+{
+	struct KBDKey * key;
+	setKey(key, c);	
 }

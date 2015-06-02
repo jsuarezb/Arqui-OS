@@ -45,7 +45,7 @@ void _vWriteFormat(char c, char format) {
 			break;
 	}
 
-	if (vOffset > 2 * VIDEO_SIZE)
+	if (vOffset >= 2 * VIDEO_SIZE)
 		_vMoveUp();
 	
 }
