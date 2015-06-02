@@ -108,6 +108,8 @@ int main()
 	int x;
 	for (x = 0; x < 80; x++)
 		_vWrite('#');
+	
+	KBDinitialize();
 
 	IDTinitialize();
 

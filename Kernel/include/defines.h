@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define FALSE	0
+#define TRUE	!FALSE
+
 // Video driver
 #define VIDEO_START		0xB8000
 #define VIDEO_WIDTH		80
@@ -14,24 +17,38 @@
 // Keyboard driver
 #define ASCII_ESCAPE	27
 #define ASCII_CTRL		29
-#define ASCII_SHIFT		42
-#define ASCII_PRTSC		55
-#define ASCII_ALT		56
-#define ASCII_CAPS		58
-#define ASCII_F1		59
-#define ASCII_F2		60
-#define ASCII_F3		61
-#define ASCII_F4		62
-#define ASCII_F5		63
-#define ASCII_F6		64
-#define ASCII_F7		65
-#define ASCII_F8		66
-#define ASCII_F9		67
-#define ASCII_F10		68
-#define ASCII_NUMLOCK	69
-#define ASCII_SCROLLLOCK	70
+#define ASCII_SHIFT		20
+#define ASCII_PRTSC		15
+#define ASCII_ALT		27
+#define ASCII_CAPS		27
+#define ASCII_F1		27
+#define ASCII_F2		27
+#define ASCII_F3		27
+#define ASCII_F4		27
+#define ASCII_F5		27
+#define ASCII_F6		27
+#define ASCII_F7		27
+#define ASCII_F8		27
+#define ASCII_F9		27
+#define ASCII_F10		27
+#define ASCII_NUMLOCK	27
+#define ASCII_SCROLLLOCK	27
 #define ASCII_DELETE	127
-#define SYS_REQ			84
+#define SYS_REQ			27
+
+#define LSHIFT_PRESSED	42
+#define LSHIFT_RELEASED LSHIFT_PRESSED | 0x80
+#define RSHIFT_PRESSED	54
+#define RSHIFT_RELEASED RSHIFT_PRESSED | 0x80
+#define CAPS_PRESSED	58
+#define CAPS_RELEASED	CAPS_PRESSED | 0x80
+#define CTRL_PRESSED	29
+#define CTRL_RELEASED	29 | 0x80
+
+#define RELEASE_FLAG	0x80
+
+#define LOWERCASE	0
+#define UPPERCASE	1
 
 // IDT
 /*
@@ -72,16 +89,17 @@ struct IDTEntry {
 };
 
 struct KBD {
-	int capsPressed;
-	int shiftPressed;
-	int altPressed;
-	int ctrlPressed;
+	int capsEnabled;
+	int shiftEnabled;
+	int altEnabled;
+	int ctrlEnabled;
 	int pollRead;
 	int pollWrite;
-	int pollBuffer[32];
+	int pollBuffer[16];
 };
 
 struct KBDKey {
+	int shown;
 	unsigned char asciiCode;
 	unsigned char keyCode;
 };
