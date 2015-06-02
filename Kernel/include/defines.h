@@ -36,19 +36,23 @@
 #define ASCII_DELETE	127
 #define SYS_REQ			27
 
-#define LSHIFT_PRESSED	42
-#define LSHIFT_RELEASED LSHIFT_PRESSED | 0x80
-#define RSHIFT_PRESSED	54
-#define RSHIFT_RELEASED RSHIFT_PRESSED | 0x80
-#define CAPS_PRESSED	58
-#define CAPS_RELEASED	CAPS_PRESSED | 0x80
-#define CTRL_PRESSED	29
-#define CTRL_RELEASED	29 | 0x80
-
 #define RELEASE_FLAG	0x80
 
-#define LOWERCASE	0
-#define UPPERCASE	1
+#define LSHIFT_PRESSED	42
+#define LSHIFT_RELEASED LSHIFT_PRESSED | RELEASE_FLAG
+#define RSHIFT_PRESSED	54
+#define RSHIFT_RELEASED RSHIFT_PRESSED | RELEASE_FLAG
+#define CAPS_PRESSED	58
+#define CAPS_RELEASED	CAPS_PRESSED | RELEASE_FLAG
+#define CTRL_PRESSED	29
+#define CTRL_RELEASED	29 | RELEASE_FLAG 
+#define ALT_PRESSED		56
+#define ALT_RELEASED	56 | RELEASE_FLAG
+
+#define KBD_BUFFER_SIZE	16
+
+#define UPPERCASE	0
+#define LOWERCASE	1
 
 // IDT
 /*
@@ -93,9 +97,9 @@ struct KBD {
 	int shiftEnabled;
 	int altEnabled;
 	int ctrlEnabled;
-	int pollRead;
-	int pollWrite;
-	int pollBuffer[16];
+	int readIndex;
+	int writeIndex;
+	int buffer[KBD_BUFFER_SIZE];
 };
 
 struct KBDKey {

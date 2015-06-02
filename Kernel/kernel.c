@@ -6,6 +6,8 @@
 #include <video.h>
 #include "include/defines.h"
 #include "include/idt.h"
+#include "include/video.h"
+#include "include/keyboard.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -23,6 +25,7 @@ static void * const sampleDataModuleAddress = (void*)0x500000;
 
 static struct IDTEntry* idt = (struct IDTEntry*) 0x0000;
 static struct IDTR idtr;
+struct KBD keyboard;
 
 typedef int (*EntryPoint)();
 
@@ -113,7 +116,12 @@ int main()
 
 	IDTinitialize();
 
-	while(1) { }
+	while(1) {
+		while (!canRead());
+
+		unsigned char c = getKey();
+		_vWrite(c);
+	}
 
 	return 0;
 }
