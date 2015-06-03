@@ -3,7 +3,10 @@
 #include "lib.h"
 #include "shell.h"
 
-#define COMMAND_LINE_SIZE	76
+#define COMMAND_LINE_SIZE	76`
+#define GET_TIME			0
+#define SET_TIME			1
+#define SET_SCREENSAVER		2
 
 char shellBuffer[COMMAND_LINE_SIZE] = {0};
 int bufferIndex = 0;
@@ -91,18 +94,91 @@ static void clearBuffer(void)
  */
 static void help()
 {
+	int opt;
 	printf("Hi, I'm help, available commands:\n");
-	printf("help, time, stime, ss\n");
+	printf("Please select your option\n");
+	printf("0 - GET TIME\n");
+	printf("1 - SET TIME\n");
+
+	sscanf("%d",opt);
+
+	switch(arg){
+		case GET_TIME:
+			print("Descripcion de Time");
+			break;
+		case SET_TIME:
+			printf("Descripcion de Set");
+			break;
+	}
 }
 
 static void setTime()
 {
-	// TODO
+	uint8_t hour, minute, second, year, day, month;
+	char c,d;
+	date current_date;
+
+	// -------------------- YEAR ---------------- //
+	printf("Enter year:\n");
+	do {
+		sscanf("%d",year);
+	}
+	while ( year < 0 )
+
+	// -------------------- MONTH ---------------- //
+	printf("Enter months:\n");
+	do {
+		sscanf("%d",month);
+	}
+	while ( month < 0 || month > 12)
+	
+	
+	// -------------------- DAY ---------------- //
+	printf("Enter days:\n");
+	do {
+		sscanf("%d",day);
+	}
+	while ( day < 0 || day > 31)
+	
+	// -------------------- HOUR ---------------- //
+	printf("Enter hours:\n");
+	do {
+		sscanf("%d",hour);
+	}
+	while ( hour < 0 || hour > 23)
+
+	// -------------------- MINUTE ---------------- //
+	printf("Enter minutes:\n");
+	do {
+		sscanf("%d",minute);
+	}
+	while ( minute < 0 || minute > 59)
+
+	// -------------------- SECOND ---------------- //
+	printf("Enter seconds:\n");
+	do {
+		sscanf("%d",second);
+	}
+	while ( second < 0 || second > 59)
+
+
+	current_date->hour = hour;
+	current_date->minute = minute;
+	current_date->second = second;
+	current_date->day = day;
+	current_date->month = month;
+	current_date->year = year;
+
+	execSysCall( SYS_TIME, &current_date, 1, 1 );
+	printf("Complete.\n");
 }
 
 static void getTime()
 {
-	// TODO
+	date current_date;
+	execSysCall( SYS_TIME, &current_date, 1, 1 );
+	printf("Current date and time: %02i:%02i:%02i %02i/%02i/%02i", current_date->hour, current_date->minute, 
+	current_date->second, current_date->day, current_date->month, current_date->year);
 }
 
 static void setScreensaver(int seconds)
