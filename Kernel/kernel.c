@@ -106,22 +106,10 @@ int main()
 
 	ncPrint("[Finished]");
 	
-	_vClear();
 
-	int x;
-	for (x = 0; x < 80; x++)
-		_vWrite('#');
-	
 	KBDinitialize();
 
 	IDTinitialize();
-
-	while(1) {
-		while (isBufferEmpty());
-
-		unsigned char c = getKey();
-		_vWrite(c);
-	}
 
 	return 0;
 }
