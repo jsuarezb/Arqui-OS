@@ -54,13 +54,23 @@
 #define UPPERCASE	0
 #define LOWERCASE	1
 
+// System calls
+#define SYS_READ	0x03
+#define SYS_WRITE	0x04
+#define SYS_TIME	0x0D
+#define SYS_STIME	0x19
+
+#define STDIN	0
+#define STDOUT	1
+
 // IDT
 /*
  * IDTR and IDT entry structure taken from
  * http://wiki.osdev.org/Interrupt_Descriptor_Table#IDT_in_IA-32e_Mode_.2864-bit_IDT.29
  */
 #define IDT_OFFSET	0x20 // Pure64 interruptions offset
-#define TIMER_TICK	0x00
+#define TIMER_TICK	IDT_OFFSET + 0x00
+#define KEYBOARD	IDT_OFFSET + 0x01
 
 /*
  * Register that points to the IDT
@@ -107,5 +117,6 @@ struct KBDKey {
 	unsigned char asciiCode;
 	unsigned char keyCode;
 };
+
 
 #endif

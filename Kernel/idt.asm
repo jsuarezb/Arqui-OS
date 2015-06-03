@@ -8,7 +8,8 @@ GLOBAL picMasterMask
 GLOBAL picSlaveMask
 
 EXTERN keyboardHandler
-EXTERN timerTick
+EXTERN timertickHandler
+EXTERN syscallHandler
 
 %macro pushaq 0
     push rax      ;save current rax
@@ -115,7 +116,7 @@ picSlaveMask:
 _irq00handler:
 	pushaq
 
-	call timerTick
+	call timertickHandler
 
 	END_INT
 
@@ -135,3 +136,22 @@ _irq01handler:
 	out 61h, al
 
 	END_INT
+
+; System call
+; recieves the system call code in rax
+; and parameters in rdi, rsi, rdx, r10, r8 and r9
+; We won't be using more than 3 params
+; TODO: es necesario almacenar los registros?
+_int80handler:
+	push rbp
+	mov rbp, rsp
+
+	mov rcx, rdx
+	mov rdx, rsi
+	mov rsi, rdi
+	mov rdi, rax
+	call syscallHandler
+	
+	mov rsp, rbp
+	pop rbp
+	iretq

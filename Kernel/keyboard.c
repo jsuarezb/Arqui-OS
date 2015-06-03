@@ -89,15 +89,6 @@ void setKey(struct KBDKey * key, unsigned char code)
 		addKey(key->asciiCode);
 }
 
-// Returns if the code of the pressed key is a letter
-int isLetter(unsigned char c) 
-{
-	if ((c >= 16 && c <= 25) || (c >= 30 && c <= 38) || (c >= 44 && c <= 50))
-		return TRUE;
-
-	return FALSE;
-}
-
 int addKey(unsigned char c)
 {
 	keyboard.buffer[keyboard.writeIndex++] = c;
@@ -117,10 +108,19 @@ unsigned char getKey()
 	return c;
 }
 
-int canRead() 
+// Returns if the code of the pressed key is a letter
+int isLetter(unsigned char c) 
 {
-	if (keyboard.buffer[keyboard.readIndex] != 0)
+	if ((c >= 16 && c <= 25) || (c >= 30 && c <= 38) || (c >= 44 && c <= 50))
 		return TRUE;
 
 	return FALSE;
+}
+
+int isBufferEmpty() 
+{
+	if (keyboard.buffer[keyboard.readIndex] != 0)
+		return FALSE;
+
+	return TRUE;
 }
