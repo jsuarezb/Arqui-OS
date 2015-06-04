@@ -87,41 +87,12 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	ncPrint("[Kernel Main]");
-	ncNewline();
-	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
-	ncNewline();
-
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
-
-	ncPrint("[Finished]");
-	
 	_vClear();
 
-	int x;
-	for (x = 0; x < 80; x++)
-		_vWrite('#');
-	
 	KBDinitialize();
-
 	IDTinitialize();
 
-	while(1) {
-		while (isBufferEmpty());
-
-		unsigned char c = getKey();
-		_vWrite(c);
-	}
+	((EntryPoint)sampleCodeModuleAddress)();
 
 	return 0;
 }
@@ -133,8 +104,9 @@ void IDTinitialize()
 {
 	setupIDTentry(TIMER_TICK, 0x08, &_irq00handler, 0x8E);
 	setupIDTentry(KEYBOARD, 0x08, &_irq01handler, 0x8E);
+	setupIDTentry(SYSCALL, 0x08, &_int80handler, 0x8E);
 
-	picMasterMask(0xFE); 
+	picMasterMask(0xF8); 
 	picSlaveMask(0xFF);
 
 	_sti();

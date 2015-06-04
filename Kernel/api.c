@@ -28,9 +28,10 @@ signed int write(unsigned int fd, const char * buf, int count)
 	signed int bytes = 0;
 
 	if (fd == STDOUT) {
-		while (count--) {
+		while (count) {
 			_vWrite(buf[bytes]);
 			bytes++;
+			count--;
 		}
 	}
 
