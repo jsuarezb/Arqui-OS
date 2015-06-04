@@ -3,7 +3,7 @@
 
 #include "defines.h"
 
-void setKey(struct KBDKey * key, unsigned char code);
+void setKey(unsigned char code);
 void KBDinitialize();
 int addKey(unsigned char c);
 unsigned char getKey();

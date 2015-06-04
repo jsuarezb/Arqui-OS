@@ -11,6 +11,8 @@ static int vOffset = 0;
 static const int width = VIDEO_WIDTH;
 static const int height = VIDEO_HEIGHT;
 
+struct ScreenBackup screenBackup;
+
 void _vClear() {
 	int x;
 
@@ -84,4 +86,30 @@ void _vNewLine() {
 		_vWrite(' ');
 	} while ((vOffset / 2) % width > 0);
 
+}
+
+/*
+ * Saves the screen in a backup array
+ */
+void _vBackupScreen() {
+	int i = 0;
+
+	screenBackup.cursor = vOffset;
+	while (i < VIDEO_SIZE * 2) {
+		screenBackup.video[i] = video[i];
+		i++;
+	}
+}
+
+/*
+ * Restores the screen saved in the backup array
+ */
+void _vRestoreScreen() {
+	int i = 0;
+
+	vOffset = screenBackup.cursor;
+	while (i < VIDEO_SIZE * 2) {
+		video[i] = screenBackup.video[i];
+		i++;
+	}
 }

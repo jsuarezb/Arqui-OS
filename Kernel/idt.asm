@@ -49,13 +49,20 @@ EXTERN syscallHandler
 
 %macro END_INT 0
 	mov al, 20h ; Acknowledge interruption was treated
-	out 20h, al ; and PIC can recieve the next one
+	out PIC_MASTER_CONTROL, al ; and PIC can recieve the next one
 
 	popaq
 	iretq
 %endmacro
 
 section .text
+; Constants
+PIC_MASTER_CONTROL	equ	0x20
+PIC_MASTER_MASK		equ 0x21
+PIC_SLAVE_CONTROL	equ	0xA0
+PIC_SLAVE_MASK		equ	0xA1
+KBD_PORT			equ	0x60
+KBD_STATUS			equ 0x61
 
 ; Disable interruptions
 _cli:
@@ -94,21 +101,19 @@ _in_io:
 	pop rbp
 	ret
 
-
-
 picMasterMask:
 	push rbp
     mov rbp, rsp
     mov ax, si
-    out	21h,al
+    out	PIC_MASTER_MASK, al
     pop rbp
     retn
 
 picSlaveMask:
 	push    rbp
     mov     rbp, rsp
-    mov     ax, si  ; ax = mascara de 16 bits
-    out		0A1h, al
+    mov     ax, si  
+    out		PIC_SLAVE_MASK, al
     pop     rbp
     retn
 
@@ -124,16 +129,16 @@ _irq00handler:
 _irq01handler:
 	pushaq
 	
-	in al, 60h
+	in al, KBD_PORT
 
 	mov rdi, rax
 	call keyboardHandler
 
-	in al, 61h
+	in al, KBD_STATUS
 	or al, 80h
-	out 61h, al
+	out KBD_STATUS, al
 	and al, 7Fh
-	out 61h, al
+	out KBD_STATUS, al
 
 	END_INT
 
@@ -141,7 +146,6 @@ _irq01handler:
 ; recieves the system call code in rax
 ; and parameters in rdi, rsi, rdx, r10, r8 and r9
 ; We won't be using more than 3 params
-; TODO: es necesario almacenar los registros?
 _int80handler:
 	push rbp
 	mov rbp, rsp

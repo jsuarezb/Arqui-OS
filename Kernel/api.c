@@ -41,3 +41,4 @@ int setRTC(int content, int value)
 	// TODO
 	return 0;
 }
+

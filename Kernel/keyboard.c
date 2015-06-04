@@ -43,11 +43,12 @@ void KBDinitialize()
 /*
  * Sets the corresponding key properties
  */
-void setKey(struct KBDKey * key, unsigned char code)
+void setKey(unsigned char code)
 {
+	struct KBDKey key;
 	int state = LOWERCASE;
 
-	key->shown = FALSE;
+	key.shown = FALSE;
 
 	switch (code) {
 		case LSHIFT_PRESSED:
@@ -71,7 +72,7 @@ void setKey(struct KBDKey * key, unsigned char code)
 			break;
 		default:
 			if (!(code & 0x80)) {
-				key->shown = TRUE;
+				key.shown = TRUE;
 				if ((isLetter(code) && keyboard.capsEnabled && !keyboard.shiftEnabled) || 
 							(!keyboard.capsEnabled && keyboard.shiftEnabled)) {
 					state = UPPERCASE;
@@ -82,11 +83,11 @@ void setKey(struct KBDKey * key, unsigned char code)
 	}
 
 
-	key->keyCode = code;
-	key->asciiCode = keysTable[state][code];
+	key.keyCode = code;
+	key.asciiCode = keysTable[state][code];
 
-	if (key->shown)
-		addKey(key->asciiCode);
+	if (key.shown)
+		addKey(key.asciiCode);
 }
 
 int addKey(unsigned char c)
