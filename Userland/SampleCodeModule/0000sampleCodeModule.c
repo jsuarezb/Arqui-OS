@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "lib.h"
+#include "libasm.h"
 
 char * v = (char*)0xB8000 + 79 * 2;
  
@@ -15,31 +16,10 @@ int main() {
 	//Clean BSS
 	memset(&bss, 0, &endOfBinary - &bss);
 
-	char* aux = 0xB8000;
-	aux[0] = 'd';
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	putChar('c');
-	
+	while (1) {
+		putChar('c');
+	}
+
 	//Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)
 		return 0xDEADC0DE;

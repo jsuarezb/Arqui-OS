@@ -1,5 +1,6 @@
 GLOBAL _irq00handler
 GLOBAL _irq01handler
+GLOBAL _int80handler
 GLOBAL _sti
 GLOBAL _cli
 GLOBAL _in_io
@@ -10,6 +11,7 @@ GLOBAL picSlaveMask
 EXTERN keyboardHandler
 EXTERN timertickHandler
 EXTERN syscallHandler
+EXTERN _vWrite
 
 %macro pushaq 0
     push rax      ;save current rax
@@ -74,33 +76,6 @@ _sti:
 	sti
 	ret
 
-; I/O operations
-; writes rsi value into io position [rdi]
-_out_io:
-	push rbp
-	mov rbp, rsp
-
-	mov rdx, rdi
-	mov rax, rsi
-	out dx, al	; writes al content into dx (i/o)
-
-	mov rsp, rbp
-	pop rbp
-	ret
-
-; reads from io position rdi and writes into [rsi]
-_in_io:
-	push rbp
-	mov rbp, rsp
-
-	mov rdx, rdi
-	in al, dx		; puts what's in dx (i/o) into al reg
-	mov [rsi], al
-
-	mov rsp, rbp
-	pop rbp
-	ret
-
 picMasterMask:
 	push rbp
     mov rbp, rsp
@@ -155,7 +130,7 @@ _int80handler:
 	mov rsi, rdi
 	mov rdi, rax
 	call syscallHandler
-	
+
 	mov rsp, rbp
 	pop rbp
 	iretq

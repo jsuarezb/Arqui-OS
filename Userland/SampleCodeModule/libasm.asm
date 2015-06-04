@@ -15,7 +15,7 @@ execSysCall:
 	mov rax, rdi
 	mov rdi, rsi 
 	mov rsi, rdx
-	mov rdx, rbx
+	mov rdx, rcx
 
 	int 80h
 

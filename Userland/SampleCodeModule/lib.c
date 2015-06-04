@@ -10,7 +10,7 @@
 
 void putChar( char c ) 
 {
-	execSysCall( SYS_WRITE, STDOUT, &c, 1 );
+	execSysCall(SYS_WRITE, STDOUT, &c, 1);
 }
 
 void printf( char* s )
