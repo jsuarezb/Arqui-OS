@@ -2,21 +2,48 @@
 #include "include/video.h"
 #include "include/keyboard.h"
 #include "include/api.h"
+#include "include/screensaver.h"
+#include "include/handler.h"
 
-static int i = 0;
+static unsigned int timer = SCREENSAVER_WAIT_TIME;
+static unsigned int tickCount = TICKS_PER_FRAME;
+static unsigned int showingScreensaver = FALSE;
 
+/*
+ * Function to run on timer tick interruption
+ */
 void timertickHandler()
 {
-
+	if (timer == 0) { // Screensaver state
+		if (!showingScreensaver) { 
+			// If it's not showing the screensaver yet
+			startScreensaver();
+		} else { 
+			// If it's already showing it
+			tickScreensaver();
+		}
+	} else {
+		timer--;
+	}
 }
 
+/*
+ * Function to run on keyboard interruption
+ */
 void keyboardHandler(unsigned char c)
 {
-	struct KBDKey key;
-	setKey(&key, c);
+	timer = SCREENSAVER_WAIT_TIME;
+	if (showingScreensaver) {
+		stopScreensaver();			
+	}	
+
+	setKey(c);
 }
 
-void syscallHandler(int code, int arg1, int arg2, int arg3)
+/*
+ * Function to run on software interruption (int 80h)
+ */
+void syscallHandler(uint64_t code, uint64_t arg1, uint64_t arg2, uint64_t arg3)
 {
 	switch (code) {
 		case SYS_READ:
@@ -31,5 +58,37 @@ void syscallHandler(int code, int arg1, int arg2, int arg3)
 			return setRTC(arg1, arg2);
 		default:
 			break;
+	}
+}
+
+/*
+ * Saves the current screen and shows the screensaver
+ */
+void startScreensaver()
+{
+	showingScreensaver = TRUE;
+	_vBackupScreen();
+	initScreensaver();
+}
+
+/*
+ * Stops the screensaver and resumes activity
+ */
+void stopScreensaver()
+{
+	_vRestoreScreen();
+	showingScreensaver = FALSE;
+}
+
+/*
+ * Frame manager for the screensaver
+ */
+void tickScreensaver()
+{
+	if (tickCount == 0) {
+		nextFrame();
+		tickCount = TICKS_PER_FRAME;
+	} else {
+		tickCount--;
 	}
 }

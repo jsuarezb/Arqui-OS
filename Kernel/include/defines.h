@@ -11,8 +11,18 @@
 #define VIDEO_WIDTH		80
 #define VIDEO_HEIGHT	25
 
-#define DEFAULT_CONSOLE_FORMAT	0x0F
-#define ERROR_CONSOLE_FORMAT	0xCF
+#define WHITE_BG	0xF0
+#define WHITE_FG	0x0F
+#define RED_BG		0xC0
+#define RED_FG		0x0C
+#define BLACK_BG	0x00
+#define BLACK_FG	0x00
+
+#define DEFAULT_CONSOLE_FORMAT	BLACK_BG | WHITE_FG
+#define ERROR_CONSOLE_FORMAT	RED_BG | WHITE_FG
+
+// Screensaver
+#define FRAMES	3
 
 // Keyboard driver
 #define ASCII_ESCAPE	27
@@ -118,5 +128,9 @@ struct KBDKey {
 	unsigned char keyCode;
 };
 
+struct ScreenBackup {
+	char video[VIDEO_WIDTH * VIDEO_HEIGHT * 2];
+	int cursor;
+};
 
 #endif
