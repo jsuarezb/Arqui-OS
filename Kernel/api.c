@@ -1,6 +1,10 @@
 #include <stdint.h>
 #include "include/keyboard.h"
 
+/*
+ * Reads from `fd`, `count` amount of chars and
+ * stores it into `buf`
+ */
 signed int read(unsigned int fd, char * buf, int count)
 {
 	signed int bytes = 0;
@@ -16,6 +20,9 @@ signed int read(unsigned int fd, char * buf, int count)
 	return bytes;
 }
 
+/*
+ * Writes `count` amount of bytes from `buf` into `fd`
+ */
 signed int write(unsigned int fd, const char * buf, int count)
 {
 	signed int bytes = 0;

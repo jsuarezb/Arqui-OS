@@ -126,6 +126,9 @@ int main()
 	return 0;
 }
 
+/*
+ * Setup the IDT so it can get interruptions
+ */
 void IDTinitialize()
 {
 	setupIDTentry(TIMER_TICK, 0x08, &_irq00handler, 0x8E);
@@ -137,7 +140,9 @@ void IDTinitialize()
 	_sti();
 }
 
-
+/*
+ * Modify an entry in the IDT
+ */
 void setupIDTentry(int index, uint16_t selector, uint64_t offset, uint8_t access)
 {
 	idt[index].lowBits = offset & 0xFFFF;

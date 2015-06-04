@@ -7,7 +7,7 @@
 
 void initScreensaver();
 
-void tick();
+void nextFrame();
 
 void draw();
 

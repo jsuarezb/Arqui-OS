@@ -6,6 +6,6 @@ void keyboardHandler(unsigned char c);
 void syscallHandler(uint64_t code, uint64_t arg1, uint64_t arg2, uint64_t arg3);
 void startScreensaver();
 void stopScreensaver();
-void tick();
+void tickScreensaver();
 
 #endif

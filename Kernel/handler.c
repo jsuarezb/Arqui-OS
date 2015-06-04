@@ -9,6 +9,9 @@ static unsigned int timer = SCREENSAVER_WAIT_TIME;
 static unsigned int tickCount = TICKS_PER_FRAME;
 static unsigned int showingScreensaver = FALSE;
 
+/*
+ * Function to run on timer tick interruption
+ */
 void timertickHandler()
 {
 	if (timer == 0) { // Screensaver state
@@ -17,13 +20,16 @@ void timertickHandler()
 			startScreensaver();
 		} else { 
 			// If it's already showing it
-			tick();
+			tickScreensaver();
 		}
 	} else {
 		timer--;
 	}
 }
 
+/*
+ * Function to run on keyboard interruption
+ */
 void keyboardHandler(unsigned char c)
 {
 	timer = SCREENSAVER_WAIT_TIME;
@@ -34,6 +40,9 @@ void keyboardHandler(unsigned char c)
 	setKey(c);
 }
 
+/*
+ * Function to run on software interruption (int 80h)
+ */
 void syscallHandler(uint64_t code, uint64_t arg1, uint64_t arg2, uint64_t arg3)
 {
 	switch (code) {
@@ -52,6 +61,9 @@ void syscallHandler(uint64_t code, uint64_t arg1, uint64_t arg2, uint64_t arg3)
 	}
 }
 
+/*
+ * Saves the current screen and shows the screensaver
+ */
 void startScreensaver()
 {
 	showingScreensaver = TRUE;
@@ -59,13 +71,19 @@ void startScreensaver()
 	initScreensaver();
 }
 
+/*
+ * Stops the screensaver and resumes activity
+ */
 void stopScreensaver()
 {
 	_vRestoreScreen();
 	showingScreensaver = FALSE;
 }
 
-void tick()
+/*
+ * Frame manager for the screensaver
+ */
+void tickScreensaver()
 {
 	if (tickCount == 0) {
 		nextFrame();

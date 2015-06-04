@@ -7,6 +7,9 @@ static void (*frameDrawers[FRAMES])(void);
 static int currentFrame = 0;
 static char counter = 0;
 
+/*
+ * Draw the first frame of the screensaver
+ */
 void initScreensaver()
 {
 	frameDrawers[0] = &drawFrame0;
@@ -19,12 +22,18 @@ void initScreensaver()
 	draw();
 }
 
+/*
+ * Go to the next frame and draw it
+ */
 void nextFrame()
 {
 	currentFrame = (currentFrame + 1) % FRAMES;	
 	draw();
 }
 
+/*
+ * Fill the screen with the corresponding frame
+ */
 void draw()
 {
 	// (*frameDrawers[currentFrame])();
@@ -35,6 +44,13 @@ void draw()
 		_vWriteFormat(' ', counter);
 
 }
+
+// In case I want to draw every frame by hand
+// it can be done using an array
+// of functions that draw the corresponding frame; another
+// way is to define an array containing each screen for 
+// every frame. This'd be hard to do by hand, so
+// I'm sticking with a simple drawing function
 
 void drawFrame0()
 {
