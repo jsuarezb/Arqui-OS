@@ -45,4 +45,9 @@ int strcmp(const char * str1, const char * str2);
  */
 int cindex(char c, const char * str);
 
+void printf_v ( char* s, ... );
+int int_length ( int i );
+int strlen ( char* s );
+void to_c (int i, char* to );
+
 #endif
