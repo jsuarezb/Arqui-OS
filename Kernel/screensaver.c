@@ -7,6 +7,11 @@ static void (*frameDrawers[FRAMES])(void);
 static int currentFrame = 0;
 static char counter = 0;
 
+unsigned int tickCount = TICKS_PER_FRAME;
+unsigned int showingScreensaver = FALSE;
+unsigned int timerLimit = 20 * TICKS_TO_SECONDS;
+unsigned int timer = 20 * TICKS_TO_SECONDS;
+
 /*
  * Draw the first frame of the screensaver
  */
@@ -20,6 +25,47 @@ void initScreensaver()
 
 	_vClear();
 	draw();
+}
+
+/*
+ * Saves the current screen and shows the screensaver
+ */
+void startScreensaver()
+{
+	showingScreensaver = TRUE;
+	_vBackupScreen();
+	initScreensaver();
+}
+
+/*
+ * Stops the screensaver and resumes activity
+ */
+void stopScreensaver()
+{
+	_vRestoreScreen();
+	showingScreensaver = FALSE;
+}
+
+/*
+ * Frame manager for the screensaver
+ */
+void tickScreensaver()
+{
+	if (tickCount == 0) {
+		nextFrame();
+		tickCount = TICKS_PER_FRAME;
+	} else {
+		tickCount--;
+	}
+}
+
+/*
+ * Sets a new wait time
+ */
+void setScreensaverTime(int seconds)
+{
+	timerLimit = seconds * TICKS_TO_SECONDS;
+	timer = (timer > timerLimit) ? timerLimit : timer;
 }
 
 /*

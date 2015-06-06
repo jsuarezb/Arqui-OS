@@ -3,9 +3,17 @@
 
 #define TICKS_TO_SECONDS		18
 #define TICKS_PER_FRAME 		1 * TICKS_TO_SECONDS
-#define SCREENSAVER_WAIT_TIME	60 * TICKS_TO_SECONDS
+#define SCREENSAVER_WAIT_TIME	1 * TICKS_TO_SECONDS
 
 void initScreensaver();
+
+void startScreensaver();
+
+void stopScreensaver();
+
+void tickScreensaver();
+
+void setScreensaverTime(int seconds);
 
 void nextFrame();
 

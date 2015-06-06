@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "lib.h"
 #include "libasm.h"
+#include "shell.h"
 
 char * v = (char*)0xB8000 + 79 * 2;
  
@@ -16,14 +17,11 @@ int main() {
 	//Clean BSS
 	memset(&bss, 0, &endOfBinary - &bss);
 
-	while (1) {
-		putChar('c');
-	}
+	startShell();
 
 	//Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)
 		return 0xDEADC0DE;
-
 
 	return 0xDEADBEEF;
 }

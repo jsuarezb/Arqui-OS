@@ -5,9 +5,10 @@
 #include "include/screensaver.h"
 #include "include/handler.h"
 
-static unsigned int timer = SCREENSAVER_WAIT_TIME;
-static unsigned int tickCount = TICKS_PER_FRAME;
-static unsigned int showingScreensaver = FALSE;
+extern unsigned int tickCount;
+extern unsigned int showingScreensaver;
+extern unsigned int timerLimit;
+extern unsigned int timer;
 
 /*
  * Function to run on timer tick interruption
@@ -32,7 +33,7 @@ void timertickHandler()
  */
 void keyboardHandler(unsigned char c)
 {
-	timer = SCREENSAVER_WAIT_TIME;
+	timer = timerLimit;
 	if (showingScreensaver) {
 		stopScreensaver();			
 	}	
@@ -56,39 +57,9 @@ void syscallHandler(uint64_t code, uint64_t arg1, uint64_t arg2, uint64_t arg3)
 			return getRTC(arg1);
 		case SYS_STIME:
 			return setRTC(arg1, arg2);
+		case SYS_SCREENSAVER:
+			setScreensaverTime(arg1);
 		default:
 			break;
-	}
-}
-
-/*
- * Saves the current screen and shows the screensaver
- */
-void startScreensaver()
-{
-	showingScreensaver = TRUE;
-	_vBackupScreen();
-	initScreensaver();
-}
-
-/*
- * Stops the screensaver and resumes activity
- */
-void stopScreensaver()
-{
-	_vRestoreScreen();
-	showingScreensaver = FALSE;
-}
-
-/*
- * Frame manager for the screensaver
- */
-void tickScreensaver()
-{
-	if (tickCount == 0) {
-		nextFrame();
-		tickCount = TICKS_PER_FRAME;
-	} else {
-		tickCount--;
 	}
 }
