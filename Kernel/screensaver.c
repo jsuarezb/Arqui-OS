@@ -2,6 +2,9 @@
 #include "include/video.h"
 #include "include/defines.h"
 #include "include/screensaver.h"
+#include "include/life.h"
+
+extern char cells[VIDEO_HEIGHT][VIDEO_WIDTH];
 
 static void (*frameDrawers[FRAMES])(void);
 static int currentFrame = 0;
@@ -24,6 +27,7 @@ void initScreensaver()
 	counter = 0;
 
 	_vClear();
+	setupLife();
 	draw();
 }
 
@@ -83,12 +87,17 @@ void nextFrame()
 void draw()
 {
 	// (*frameDrawers[currentFrame])();
-	int i;
+	int x, y;
 
-	counter = (counter == 0) ? 0xFF : 0x00;
-	for (i = 0; i < VIDEO_WIDTH; i++)
-		_vWriteFormat(' ', counter);
-
+	nextGen();
+	for (y = 0; y < VIDEO_HEIGHT; y++) {
+		for (x = 0; x < VIDEO_WIDTH; x++) {
+			if (cells[y][x] == 1)
+				_vWriteFormat(' ', RED_BG | RED_FG);
+			else
+				_vWriteFormat(' ', BLACK_BG | WHITE_FG);
+		}
+	}
 }
 
 // In case I want to draw every frame by hand

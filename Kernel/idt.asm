@@ -17,7 +17,7 @@ EXTERN _vWrite
     push rax      ;save current rax
     push rbx      ;save current rbx
     push rcx      ;save current rcx
-    push rdx      ;save current rdx
+    push rdx      ;savepushaq current rdx
     push rbp      ;save current rbp
     push rdi       ;save current rdi
     push rsi       ;save current rsi
@@ -122,8 +122,7 @@ _irq01handler:
 ; and parameters in rdi, rsi, rdx, r10, r8 and r9
 ; We won't be using more than 3 params
 _int80handler:
-	push rbp
-	mov rbp, rsp
+	pushaq
 
 	mov rcx, rdx
 	mov rdx, rsi
@@ -131,6 +130,5 @@ _int80handler:
 	mov rdi, rax
 	call syscallHandler
 
-	mov rsp, rbp
-	pop rbp
+	popaq
 	iretq
