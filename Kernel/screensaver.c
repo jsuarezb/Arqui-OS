@@ -2,10 +2,18 @@
 #include "include/video.h"
 #include "include/defines.h"
 #include "include/screensaver.h"
+#include "include/life.h"
+
+extern char cells[VIDEO_HEIGHT][VIDEO_WIDTH];
 
 static void (*frameDrawers[FRAMES])(void);
 static int currentFrame = 0;
 static char counter = 0;
+
+unsigned int tickCount = TICKS_PER_FRAME;
+unsigned int showingScreensaver = FALSE;
+unsigned int timerLimit = 20 * TICKS_TO_SECONDS;
+unsigned int timer = 20 * TICKS_TO_SECONDS;
 
 /*
  * Draw the first frame of the screensaver
@@ -19,7 +27,49 @@ void initScreensaver()
 	counter = 0;
 
 	_vClear();
+	setupLife();
 	draw();
+}
+
+/*
+ * Saves the current screen and shows the screensaver
+ */
+void startScreensaver()
+{
+	showingScreensaver = TRUE;
+	_vBackupScreen();
+	initScreensaver();
+}
+
+/*
+ * Stops the screensaver and resumes activity
+ */
+void stopScreensaver()
+{
+	_vRestoreScreen();
+	showingScreensaver = FALSE;
+}
+
+/*
+ * Frame manager for the screensaver
+ */
+void tickScreensaver()
+{
+	if (tickCount == 0) {
+		nextFrame();
+		tickCount = TICKS_PER_FRAME;
+	} else {
+		tickCount--;
+	}
+}
+
+/*
+ * Sets a new wait time
+ */
+void setScreensaverTime(int seconds)
+{
+	timerLimit = seconds * TICKS_TO_SECONDS;
+	timer = (timer > timerLimit) ? timerLimit : timer;
 }
 
 /*
@@ -37,12 +87,17 @@ void nextFrame()
 void draw()
 {
 	// (*frameDrawers[currentFrame])();
-	int i;
+	int x, y;
 
-	counter = (counter == 0) ? 0xFF : 0x00;
-	for (i = 0; i < VIDEO_WIDTH; i++)
-		_vWriteFormat(' ', counter);
-
+	nextGen();
+	for (y = 0; y < VIDEO_HEIGHT; y++) {
+		for (x = 0; x < VIDEO_WIDTH; x++) {
+			if (cells[y][x] == 1)
+				_vWriteFormat(' ', RED_BG | RED_FG);
+			else
+				_vWriteFormat(' ', BLACK_BG | WHITE_FG);
+		}
+	}
 }
 
 // In case I want to draw every frame by hand
