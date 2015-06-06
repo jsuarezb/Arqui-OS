@@ -11,43 +11,70 @@
 
 #include <stdarg.h>		
 
-void putChar( char c ) 
+void putChar(char c) 
 {
 	execSysCall(SYS_WRITE, STDOUT, &c, 1);
 }
 
 char getChar()
 {
+	// If keyboard buffer does not have any keys to send
+	// then return -1
 	char c = -1;
 	execSysCall(SYS_READ, STDIN, &c, 1);
 	return c;
 }
 
+void putString(char * str)
+{
+	while (*str != '\0')
+		putChar(*str++);
+}
 
 void printf(char * s, ...)
 {
-	// TODO
-	int i = 0;
-	for ( i = 0; s[i] != '\0'; i++) {
-		putChar( s[i] );
-	}
+	va_list vl;
+	va_start(vl, s);
+
+	vprintf(s, vl);
+
+	va_end(vl);
 }
 
-void concat(char * first, char * second, char * to) 
-{
-	int i = 0;
-	int j = 0;
+void vprintf(char* s, va_list vl) {
+	char nextChar, cAux;
+	char * sAux;
+   	int i, iAux;
 
-	for ( i = 0; first[i] != '\0'; i++ ) {
-		to[i] = first[i];
+   	for (i = 0; s[i] != '\0'; i++) {
+   		if(s[i] == '%'){
+   			nextChar = s[i+1];
+
+   			if (nextChar == '\0') {
+   				putChar('%');
+   				break;
+   			} else if (nextChar == 'd') {
+				iAux = va_arg(vl, int);
+				char istring[int_length(iAux)];
+				to_s(iAux, istring);
+				putString(istring);
+				i++;
+   			} else if (nextChar == 'c') {
+				cAux = (char) va_arg(vl, int);
+				putChar(cAux);
+				i++;
+   			} else if (nextChar == 's') {
+				sAux = va_arg(vl, char *);
+				putString(sAux);
+				i++;
+   			} else {
+   				putChar('%');
+   			}
+		} else {
+			putChar(s[i]);
+		}
 	}
-	for ( j = 0; second[i] != '\0'; i++, j++ ) {
-		to[i] = second[j];
-	}
-	to[i] = '\0';
 }
-
-// printf( "gilada %d%d\n", 2, 3 )
 
 int sscanf(const char * source, const char * format, ...) 
 {
@@ -134,6 +161,20 @@ int vsscanf(const char * s, const char * f, va_list vl)
 	return count;
 }
 
+void concat(char * first, char * second, char * to) 
+{
+	int i = 0;
+	int j = 0;
+
+	for ( i = 0; first[i] != '\0'; i++ ) {
+		to[i] = first[i];
+	}
+	for ( j = 0; second[i] != '\0'; i++, j++ ) {
+		to[i] = second[j];
+	}
+	to[i] = '\0';
+}
+
 // to = placeHolder
 void to_s ( int f, char* to )
 {
@@ -155,6 +196,11 @@ void to_s ( int f, char* to )
 		*to = digits[digit%10];
 		to--;
 	} while ( f != 0 );
+}
+
+void to_c (int i, char* to ) {
+	to[0] = (char) i;
+	to[1] = '\0';
 }
 
 /*
@@ -186,40 +232,6 @@ int stoi(const char * str)
 	return i;
 }
 
-// Variable args
-
-void printf_v( char* s, ... ) {
-	
-  	va_list ap;
-   	int i;
-   	va_start(ap, s);
-	
-   	for ( i = 0; s[i] != '\0'; i++) {
-   		if( s[i] == '%' ){
-			if ( s[i+1] = 'd' ) {
-				int aux = va_arg(ap, int);
-				char istring[ (int_length(aux)) ];
-				to_s(aux, istring);
-				printf( istring );
-				i++;
-			} else if ( s[i+1] = 'c' ) {
-				char aux = va_arg(ap, char);
-				char letter[2];
-				to_c (aux, letter);
-				printf(letter);
-				i++;
-			} else if ( s[i+1] = 's' ) {
-				char* aux = va_arg(ap, char*);
-				printf(aux);
-				i++;
-			} else
-				putChar('%');
-		} else 
-			putChar( s[i] );
-   	}
-   	va_end(ap);
-}
-
 int int_length ( int i ) {
 	int aux = 0;
 	do {
@@ -234,11 +246,6 @@ int strlen ( char * s ) {
 	while (s[i] != '\0')
 		i++;
 	return i;
-} 
-
-void to_c (int i, char* to ) {
-	to[0] = (char) i;
-	to[1] = '\0';
 }
 
 int strcmp(const char * str1, const char * str2)

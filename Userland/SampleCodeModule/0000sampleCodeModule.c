@@ -17,11 +17,7 @@ int main() {
 	//Clean BSS
 	memset(&bss, 0, &endOfBinary - &bss);
 
-	char c = 'f';
-	char aux[2];
-	to_c (102,aux);
-	printf(aux);
-	printf_v( " Hello Worlk %c %d", c, 999);
+	printf("%s %c ITBA %d\n", "Arqui OS", '-', 2015);
 
 	startShell();
 
