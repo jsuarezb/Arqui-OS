@@ -71,7 +71,7 @@ void parseCommand(const char * line)
 			setScreensaver(seconds);
 
 	} else {
-		printf("Comando incorrecto.\n");
+		printf("Command not found.\n");
 	}
 
 	clearBuffer();
@@ -91,7 +91,8 @@ static void clearBuffer(void)
  */
 static void help()
 {
-	printf("Hi, I'm help.\n");
+	printf("Hi, I'm help, available commands:\n");
+	printf("help, time, stime, ss\n");
 }
 
 static void setTime()
