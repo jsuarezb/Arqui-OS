@@ -8,6 +8,8 @@
 #include "define.h"
 #include "libasm.h"
 
+#include <stdarg.h>		
+
 void putChar( char c ) 
 {
 	execSysCall(SYS_WRITE, STDOUT, &c, 1);
@@ -24,6 +26,7 @@ void printf( char* s )
 // to = placeHolder
 void to_s ( int f, char* to )
 {
+    char const digits[] = "0123456789";
 	int aux = f;
 
 	do {
@@ -38,7 +41,7 @@ void to_s ( int f, char* to )
 	do {
 		digit = f % 10;
 		f /= 10;
-		*to = digit;
+		*to = digits[digit%10];
 		to--;
 	} while ( f != 0 );
 }
@@ -71,3 +74,57 @@ void scanf ( char* s)
 	}
 }
 
+// Variable args
+
+void printf_v( char* s, ... ) {
+	
+  	va_list ap;
+   	int i;
+   	va_start(ap, s);
+	
+   	for ( i = 0; s[i] != '\0'; i++) {
+   		if( s[i] == '%' ){
+			if ( s[i+1] = 'd' ) {
+				int aux = va_arg(ap, int);
+				char istring[ (int_length(aux)) ];
+				to_s(aux, istring);
+				printf( istring );
+				i++;
+			} else if ( s[i+1] = 'c' ) {
+				char aux = va_arg(ap, char);
+				char letter[2];
+				to_c (aux, letter);
+				printf(letter);
+				i++;
+			} else if ( s[i+1] = 's' ) {
+				char* aux = va_arg(ap, char*);
+				printf(aux);
+				i++;
+			} else
+				putChar('%');
+		} else 
+			putChar( s[i] );
+   	}
+   	va_end(ap);
+}
+
+int int_length ( int i ) {
+	int aux = 0;
+	do {
+		i = i / 10;
+		aux ++;
+	} while ( i != 0 );
+	return aux;
+}
+
+int strlen ( char * s ) {
+	int i = 0;
+	while (s[i] != '\0')
+		i++;
+	return i;
+} 
+
+void to_c (int i, char* to ) {
+	to[0] = (char) i;
+	to[1] = '\0';
+}

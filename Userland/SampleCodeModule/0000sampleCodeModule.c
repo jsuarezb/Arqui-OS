@@ -15,9 +15,12 @@ void * memset(void * destiny, int32_t c, uint64_t length);
 int main() {
 	//Clean BSS
 	memset(&bss, 0, &endOfBinary - &bss);
-
+	char c = 'f';
+	char aux[2];
+	to_c (102,aux);
+	printf(aux);
+	printf_v( " Hello Worlk %c %d", c, 999);
 	while (1) {
-		putChar('c');
 	}
 
 	//Test if BSS is properly set up

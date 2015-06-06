@@ -1,6 +1,6 @@
 ;	sysCallHandler -> int 80
 ;	Hacer sys call (primer parm rax)
-;		rdi - rsi - rdx - rbx
+;		rdi - rsi - rdx - rcx
 ;	Func 
 ;		rax - rbx - rcx - rbx
 ; WRITE ( file desc, buffer, cant)
