@@ -6,6 +6,14 @@
 #define FALSE	0
 #define TRUE	!FALSE
 
+// Date
+#define SECOND 			0x00      
+#define MINUTE 			0x02
+#define HOUR 			0x04
+#define DAY 			0x07
+#define MONTH 			0x08
+#define YEAR 			0x09
+
 // Video driver
 #define VIDEO_START		0xB8000
 #define VIDEO_WIDTH		80
@@ -134,5 +142,14 @@ struct ScreenBackup {
 	char video[VIDEO_WIDTH * VIDEO_HEIGHT * 2];
 	int cursor;
 };
+
+typedef struct {
+	uint8_t year;
+	uint8_t month;
+	uint8_t day;
+	uint8_t hour;
+   	uint8_t minute;
+   	uint8_t second;
+} date;
 
 #endif

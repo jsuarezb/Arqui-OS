@@ -1,20 +1,7 @@
 #include <stdint.h>
 #include "include/keyboard.h"
-#define SECONDS 	0x00      
-#define MINUTES 	0x02
-#define HOURS 		0x04
-#define DAY 		0x07
-#define MONTH 		0x08
-#define YEAR 		0x09
-
-typedef struct date {
-	uint8_t year;
-	uint8_t month;
-	uint8_t day;
-	uint8_t hour;
-   	uint8_t minute;
-   	uint8_t second;
-} date;
+#include "include/date.h"
+#include "include/defines.h"
 
 /*
  * Reads from `fd`, `count` amount of chars and
@@ -66,12 +53,12 @@ void getRTC(date * current_date)
 
 void setRTC(date * set_time)
 {
-	setDate(SECOND, set_time->second)
-	setDate(MINUTE, set_time->minute)
-	setDate(HOUR, set_time->hour)
-	setDate(DAY, set_time->day)
-	setDate(MONTH, set_time->month)
-	setDate(YEAR, set_time->year)
+	set_date(SECOND, set_time->second);
+	set_date(MINUTE, set_time->minute);
+	set_date(HOUR, set_time->hour);
+	set_date(DAY, set_time->day);
+	set_date(MONTH, set_time->month);
+	set_date(YEAR, set_time->year);
 }
 
 void BCDtoBinary(date * date) {

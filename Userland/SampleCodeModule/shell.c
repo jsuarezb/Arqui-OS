@@ -4,8 +4,8 @@
 #include "shell.h"
 
 #define COMMAND_LINE_SIZE	76`
-#define GET_TIME			0
-#define SET_TIME			1
+#define GET_DATE			0
+#define SET_DATE			1
 #define SET_SCREENSAVER		2
 
 char shellBuffer[COMMAND_LINE_SIZE] = {0};
@@ -99,23 +99,35 @@ static void help()
 	printf("Please select your option\n");
 	printf("0 - GET TIME\n");
 	printf("1 - SET TIME\n");
+	printf("1 - SET SCREENSAVER TIME\n");
 
 	sscanf("%d",opt);
 
-	switch(arg){
-		case GET_TIME:
-			print("Descripcion de Time");
+	switch(opt){
+		case GET_DATE:
+			print("GET DATE:\n");
+			print("Command: time\n");
+			print("Display the current date and time in the following format: YYYY/MM/DD HH:MM:SS\n");
 			break;
-		case SET_TIME:
-			printf("Descripcion de Set");
+		case SET_DATE:
+			print("SET DATE:\n");
+			print("Command: stime\n");
+			print("Set the system current date and time\n");
 			break;
+		case SET_SCREENSAVER:
+			print("SET SCREENSAVER TIME:\n");
+			print("Command: ss n\n");
+			printf("** n is the timeout period in seconds **\n");
+			print("Set the scrensaver timeout period\n");
+			break;
+		default:
+			printf("Invalid command.\n");
 	}
 }
 
 static void setTime()
 {
 	uint8_t hour, minute, second, year, day, month;
-	char c,d;
 	date current_date;
 
 	// -------------------- YEAR ---------------- //
@@ -173,12 +185,17 @@ static void setTime()
 	printf("Complete.\n");
 }
 
+static int validateDayMonth(uint8_t day, uint8_t month){
+
+	// validar meses de 31 y 30 dias
+}
+
 static void getTime()
 {
 	date current_date;
 	execSysCall( SYS_TIME, &current_date, 1, 1 );
-	printf("Current date and time: %02i:%02i:%02i %02i/%02i/%02i", current_date->hour, current_date->minute, 
-	current_date->second, current_date->day, current_date->month, current_date->year);
+	printf("Current date and time: %04i/%02i/%02i %02i:%02i:%02i", current_date->year, current_date->month, current_date->day,current_date->hour, current_date->minute, 
+	current_date->second);
 }
 
 static void setScreensaver(int seconds)

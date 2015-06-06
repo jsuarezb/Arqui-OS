@@ -54,9 +54,11 @@ void syscallHandler(uint64_t code, uint64_t arg1, uint64_t arg2, uint64_t arg3)
 			write(arg1, arg2, arg3);
 			break;
 		case SYS_TIME:
-			return getRTC(arg1);
+			getRTC(arg1);
+			break;
 		case SYS_STIME:
-			return setRTC(arg1, arg2);
+			setRTC(arg1, arg2);
+			break;
 		case SYS_SCREENSAVER:
 			setScreensaverTime(arg1);
 		default:
