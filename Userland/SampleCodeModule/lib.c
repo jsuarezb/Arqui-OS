@@ -49,7 +49,6 @@ void vprintf(char* s, va_list vl) {
    	for (i = 0; s[i] != '\0'; i++) {
    		if(s[i] == '%'){
    			nextChar = s[i+1];
-
    			if (nextChar == '\0') {
    				putChar('%');
    				break;
@@ -67,11 +66,18 @@ void vprintf(char* s, va_list vl) {
 				sAux = va_arg(vl, char *);
 				putString(sAux);
 				i++;
+   			} else if (nextChar == 'x') { 
+   				iAux = va_arg(vl, int);
+   				char* hex[int_length(i)];
+   				to_hex( i, hex );
+   				putString(hex);
+   				i++;
    			} else {
    				putChar('%');
    			}
 		} else {
 			putChar(s[i]);
+
 		}
 	}
 }
@@ -258,3 +264,13 @@ int strcmp(const char * str1, const char * str2)
 	return *str1 - *str2;
 }
 
+void to_hex ( int i, char* to) {
+	int c = 0;
+	char const digits[] = "0123456789ABCDEF";
+	do {
+		to[c] = digits[i%16];
+		i = i / 16;
+		c++;
+	} while ( i != 0 );
+	to[c] = '\0';
+}
