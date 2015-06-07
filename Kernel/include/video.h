@@ -21,4 +21,8 @@ void _vMoveUp();
 
 void _vNewLine();
 
+void _vBackupScreen();
+
+void _vRestoreScreen();
+
 #endif

@@ -1,5 +1,9 @@
 #include <stdint.h>
+#include "include/defines.h"
 #include "include/keyboard.h"
+#include "include/video.h"
+#include "include/date.h"
+#include "include/api.h"
 
 /*
  * Reads from `fd`, `count` amount of chars and
@@ -38,15 +42,33 @@ signed int write(unsigned int fd, const char * buf, int count)
 	return bytes;
 }
 
-int getRTC(int content)
+void getRTC(date * current_date)
 {
-	// TODO
-	return 0;
+	current_date->second = get_date(SECOND);
+	current_date->minute = get_date(MINUTE);
+	current_date->hour = get_date(HOUR);
+	current_date->day = get_date(DAY);
+	current_date->month = get_date(MONTH);
+	current_date->year = get_date(YEAR);
+	BCDtoBinary(current_date);
 }
 
-int setRTC(int content, int value)
+void setRTC(date * set_time)
 {
-	// TODO
-	return 0;
+	set_date(SECOND, set_time->second);
+	set_date(MINUTE, set_time->minute);
+	set_date(HOUR, set_time->hour);
+	set_date(DAY, set_time->day);
+	set_date(MONTH, set_time->month);
+	set_date(YEAR, set_time->year);
+}
+
+void BCDtoBinary(date * date) {
+	date->day = (date->day & 0x0F) + ((date->day / 16) * 10);
+	date->month = (date->month & 0x0F) + ((date->month / 16) * 10);
+	date->year = (date->year & 0x0F) + ((date->year / 16) * 10);
+	date->second = (date->second & 0x0F) + ((date->second / 16) * 10);
+	date->minute = (date->minute & 0x0F) + ((date->minute / 16) * 10);
+	date->hour = (date->hour & 0x0F) + ((date->hour / 16) * 10);
 }
 

@@ -76,6 +76,8 @@ void vprintf(char* s, va_list vl) {
 	}
 }
 
+// TODO: implementar scanf(const char * fmt, ...)
+
 int sscanf(const char * source, const char * format, ...) 
 {
 	int count;

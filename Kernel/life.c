@@ -1,4 +1,5 @@
 #include "include/defines.h"
+#include "include/life.h"
 
 char cells[VIDEO_HEIGHT][VIDEO_WIDTH];
 char nextCells[VIDEO_HEIGHT][VIDEO_WIDTH];
@@ -30,7 +31,7 @@ void nextGen()
 			if (cells[y][x] == 0 && neighbors == 3)
 				nextCells[y][x] == 1;				
 			else if (neighbors == 2 || neighbors == 3)
-					nextCells[y][x] = 1;
+				nextCells[y][x] = 1;
 		}
 	}
 
