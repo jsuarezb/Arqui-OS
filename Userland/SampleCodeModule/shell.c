@@ -160,38 +160,38 @@ static void setTime()
 	// -------------------- YEAR ---------------- //
 	printf("Enter year:\n");
 	do {
-		sscanf("%d", &year);
+		scanf("%d", &year);
 	} while ( year < 0 );
 
 	// -------------------- MONTH ---------------- //
 	printf("Enter months:\n");
 	do {
-		sscanf("%d", &month);
+		scanf("%d", &month);
 	} while (month < 0 || month > 12);
 	
 	
 	// -------------------- DAY ---------------- //
 	printf("Enter days:\n");
 	do {
-		sscanf("%d", &day);
+		scanf("%d", &day);
 	} while (day < 0 || day > 31);
 	
 	// -------------------- HOUR ---------------- //
 	printf("Enter hours:\n");
 	do {
-		sscanf("%d", &hour);
+		scanf("%d", &hour);
 	} while (hour < 0 || hour > 23);
 
 	// -------------------- MINUTE ---------------- //
 	printf("Enter minutes:\n");
 	do {
-		sscanf("%d", &minute);
+		scanf("%d", &minute);
 	} while (minute < 0 || minute > 59);
 
 	// -------------------- SECOND ---------------- //
 	printf("Enter seconds:\n");
 	do {
-		sscanf("%d", &second);
+		scanf("%d", &second);
 	} while (second < 0 || second > 59);
 
 

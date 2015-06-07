@@ -260,3 +260,71 @@ int strcmp(const char * str1, const char * str2)
 	return *str1 - *str2;
 }
 
+int isDigit ( int n )
+{
+	return (n - '0' >= 0 && n - '0' <= 9);
+}
+
+int getInteger(int * integer)
+{
+	char c;
+	int digits = 0;
+	int sum = number = 0;
+
+	while(number){
+		c = getchar();
+		if( isDigit(c) ){
+			digits++;
+			res = res*10 + (c-'0');
+		}
+		else{
+			isnum=0;
+		}
+	}
+	*integer = sum;
+	return digits;
+}
+
+int scanf(const char *format, ...) 
+{
+	int *args = (int *)(&format + sizeof(*format));
+	int read = 0;
+	char c;
+	int n;
+	int digits;
+	while(*format) {
+		switch(*format) {
+			case '%':
+				format++;
+				switch(*format) {
+					case 'd':
+						digits = getInteger( (int*)*args );
+						read++;
+						args = args;
+						break;
+					case 's':
+						n = execSysCall(SYS_READ, STDIN, args, 1);
+						// tengo que poner el /0?
+						args++;
+						return read+1;
+					case 'c':
+						c = getChar();
+						*((char *)*args) = c;
+						args++;
+						read++;
+						break;
+					default:
+						// leemos un solo caracter?			
+				}
+				break;
+			default:
+				// compara el formato con el caracter leido
+				c = getChar();
+				if( *format != c ) {
+					return read;
+				}
+		}
+		format++;
+	}	
+	return read;
+}
