@@ -89,9 +89,9 @@ void parseCommand(const char * line)
 	if (strcmp(command, HELP_COMMAND) == 0) {
 		help();
 	} else if (strcmp(command, SET_TIME_COMMAND) == 0) {
-
+		setTime();
 	} else if (strcmp(command, GET_TIME_COMMAND) == 0) {
-
+		getTime();
 	} else if (strcmp(command, SET_SCREENSAVER_COMMAND) == 0) {
 		int seconds = 0;
 		if (sscanf(args, "%d", &seconds) > 0 && seconds > 0)
@@ -195,7 +195,6 @@ static void setTime()
 		scanf("%d", &second);
 	} while (second < 0 || second > 59);
 
-
 	current_date.hour = hour;
 	current_date.minute = minute;
 	current_date.second = second;
@@ -203,7 +202,7 @@ static void setTime()
 	current_date.month = month;
 	current_date.year = year;
 
-	execSysCall(SYS_TIME, &current_date, 1, 1);
+	execSysCall(SYS_STIME, &current_date, 1, 1);
 	printf("Complete.\n");
 }
 
@@ -217,7 +216,7 @@ static void getTime()
 	date current_date;
 	execSysCall(SYS_TIME, &current_date, 1, 1);
 	printf(
-		"Current date and time: %04i/%02i/%02i %02i:%02i:%02i",
+		"Current date and time: %d/%d/%d %d:%d:%d\n",
 		current_date.year,
 		current_date.month,
 		current_date.day,
