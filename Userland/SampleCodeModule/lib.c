@@ -18,10 +18,10 @@ void putChar(char c)
 
 char getChar()
 {
-	// If keyboard buffer does not have any keys to send
-	// then return -1
 	char c = -1;
-	execSysCall(SYS_READ, STDIN, &c, 1);
+	while(c == -1)
+		execSysCall(SYS_READ, STDIN, &c, 1);
+
 	return c;
 }
 
@@ -76,7 +76,39 @@ void vprintf(char* s, va_list vl) {
 	}
 }
 
-// TODO: implementar scanf(const char * fmt, ...)
+int scanf(const char * format, ...)
+{
+	char buffer[81];
+	char c;
+	int count, readIndex = 0;
+	va_list vl;
+	va_start(vl, format);
+
+	// We want to write every scanned character
+	while ((c = getChar()) != '\n') {
+		if (c == '\b') {
+			if (readIndex - 1 >= 0) {
+				buffer[readIndex] = '\0';
+				putChar(c);
+				readIndex--;
+			}
+		} else {
+			buffer[readIndex] = c;
+
+			if (readIndex + 1 > 80)
+				putChar('\b');
+			else
+				readIndex++;
+
+			putChar(c);
+		}
+	}
+	putChar('\n');
+
+	count = vsscanf(buffer, format, vl);
+	va_end(vl);
+	return count;
+}
 
 int sscanf(const char * source, const char * format, ...) 
 {
@@ -260,3 +292,7 @@ int strcmp(const char * str1, const char * str2)
 	return *str1 - *str2;
 }
 
+int isDigit ( int n )
+{
+	return (n - '0' >= 0 && n - '0' <= 9);
+}
