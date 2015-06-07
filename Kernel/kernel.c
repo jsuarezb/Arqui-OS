@@ -24,10 +24,11 @@ static void * const sampleDataModuleAddress = (void*)0x500000;
 // IDT 
 
 static struct IDTEntry* idt = (struct IDTEntry*) 0x0000;
-static struct IDTR idtr;
 struct KBD keyboard;
 
 typedef int (*EntryPoint)();
+
+void IDTinitialize();
 
 void clearBSS(void * bssAddress, uint64_t bssSize)
 {
@@ -115,11 +116,11 @@ void IDTinitialize()
 /*
  * Modify an entry in the IDT
  */
-void setupIDTentry(int index, uint16_t selector, uint64_t offset, uint8_t access)
+void setupIDTentry(int index, uint16_t selector, void (*offset)(), uint8_t access)
 {
-	idt[index].lowBits = offset & 0xFFFF;
-	idt[index].midBits = (offset >> 16) & 0xFFFF;
-	idt[index].highBits = (offset >> 32) & 0xFFFFFFFF;
+	idt[index].lowBits = (uint64_t) offset & 0xFFFF;
+	idt[index].midBits = ((uint64_t) offset >> 16) & 0xFFFF;
+	idt[index].highBits = ((uint64_t) offset >> 32) & 0xFFFFFFFF;
 
 	idt[index].selector = selector;
 	idt[index].typeAttr = access;

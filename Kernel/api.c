@@ -1,7 +1,9 @@
 #include <stdint.h>
-#include "include/keyboard.h"
-#include "include/date.h"
 #include "include/defines.h"
+#include "include/keyboard.h"
+#include "include/video.h"
+#include "include/date.h"
+#include "include/api.h"
 
 /*
  * Reads from `fd`, `count` amount of chars and
@@ -62,11 +64,11 @@ void setRTC(date * set_time)
 }
 
 void BCDtoBinary(date * date) {
- date->day = (date->day & 0x0F) + ((date->day / 16) * 10);
- date->month = (date->month & 0x0F) + ((date->month / 16) * 10);
- date->year = (date->year & 0x0F) + ((date->year / 16) * 10);
- date->second = (date->second & 0x0F) + ((date->second / 16) * 10);
- date->minute = (date->minute & 0x0F) + ((date->minute / 16) * 10);
- date->hour = (date->hour & 0x0F) + ((date->hour / 16) * 10);
+	date->day = (date->day & 0x0F) + ((date->day / 16) * 10);
+	date->month = (date->month & 0x0F) + ((date->month / 16) * 10);
+	date->year = (date->year & 0x0F) + ((date->year / 16) * 10);
+	date->second = (date->second & 0x0F) + ((date->second / 16) * 10);
+	date->minute = (date->minute & 0x0F) + ((date->minute / 16) * 10);
+	date->hour = (date->hour & 0x0F) + ((date->hour / 16) * 10);
 }
 

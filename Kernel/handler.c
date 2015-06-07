@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "include/defines.h"
 #include "include/video.h"
 #include "include/keyboard.h"
 #include "include/api.h"
@@ -48,19 +49,19 @@ void syscallHandler(uint64_t code, uint64_t arg1, uint64_t arg2, uint64_t arg3)
 {
 	switch (code) {
 		case SYS_READ:
-			read(arg1, arg2, arg3);
+			read((unsigned int) arg1, (char *) arg2, (int) arg3);
 			break;
 		case SYS_WRITE:
-			write(arg1, arg2, arg3);
+			write((unsigned int) arg1, (char *) arg2, (int) arg3);
 			break;
 		case SYS_TIME:
-			getRTC(arg1);
+			getRTC((date *) arg1);
 			break;
 		case SYS_STIME:
-			setRTC(arg1);
+			setRTC((date *) arg1);
 			break;
 		case SYS_SCREENSAVER:
-			setScreensaverTime(arg1);
+			setScreensaverTime((int) arg1);
 		default:
 			break;
 	}

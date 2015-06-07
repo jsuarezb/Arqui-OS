@@ -143,7 +143,7 @@ struct ScreenBackup {
 	int cursor;
 };
 
-typedef struct {
+typedef struct date {
 	uint8_t year;
 	uint8_t month;
 	uint8_t day;
