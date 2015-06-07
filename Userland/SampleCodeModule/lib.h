@@ -54,5 +54,6 @@ void printf_v ( char* s, ... );
 int int_length ( int i );
 int strlen ( char* s );
 void to_c (int i, char* to );
+void to_hex( int i, char* to);
 
 #endif

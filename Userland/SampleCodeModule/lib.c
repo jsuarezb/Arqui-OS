@@ -49,14 +49,13 @@ void vprintf(char* s, va_list vl) {
    	for (i = 0; s[i] != '\0'; i++) {
    		if(s[i] == '%'){
    			nextChar = s[i+1];
-
    			if (nextChar == '\0') {
    				putChar('%');
    				break;
    			} else if (nextChar == 'd') {
 				iAux = va_arg(vl, int);
 				char istring[int_length(iAux)];
-				to_s(iAux, istring);
+				itos(iAux, 10, istring);
 				putString(istring);
 				i++;
    			} else if (nextChar == 'c') {
@@ -67,11 +66,18 @@ void vprintf(char* s, va_list vl) {
 				sAux = va_arg(vl, char *);
 				putString(sAux);
 				i++;
+   			} else if (nextChar == 'x') { 
+   				iAux = va_arg(vl, int);
+   				char hex[int_length(i)];
+   				itos(iAux, 16, hex);
+   				putString(hex);
+   				i++;
    			} else {
    				putChar('%');
    			}
 		} else {
 			putChar(s[i]);
+
 		}
 	}
 }
@@ -210,31 +216,23 @@ void concat(char * first, char * second, char * to)
 }
 
 // to = placeHolder
-void to_s ( int f, char* to )
+void itos (int i, int base, char * to)
 {
-    char const digits[] = "0123456789";
-	int aux = f;
+	char const digits[] = "0123456789ABCDEF";
+	int aux = i;
 
 	do {
+		aux /= base;
 		to++;
-		aux = aux / 10;
-	} while ( aux != 0 );
-	
-	*to = '\0';
-	to--;
-	int digit = f;
-	
-	do {
-		digit = f % 10;
-		f /= 10;
-		*to = digits[digit%10];
-		to--;
-	} while ( f != 0 );
-}
+	} while (aux > 0);
 
-void to_c (int i, char* to ) {
-	to[0] = (char) i;
-	to[1] = '\0';
+	*to = '\0';
+
+	do {
+		to--;
+		*to = digits[i % base];
+		i /= base;
+	} while (i > 0);
 }
 
 /*
