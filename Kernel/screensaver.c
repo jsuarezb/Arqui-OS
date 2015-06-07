@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include "include/video.h"
 #include "include/defines.h"
+#include "include/video.h"
 #include "include/screensaver.h"
 #include "include/life.h"
 

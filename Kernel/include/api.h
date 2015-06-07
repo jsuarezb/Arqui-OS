@@ -3,7 +3,8 @@
 
 signed int read(unsigned int fd, char * buf, int count);
 signed int write(unsigned int fd, const char * buf, int count);
-int getRTC(int content);
-int setRCT(int content, int value);
+void getRTC(date * current_date);
+void setRTC(date * set_time);
+void BCDtoBinary(date * date);
 
 #endif

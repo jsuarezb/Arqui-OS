@@ -19,7 +19,7 @@ int main() {
 	//Clean BSS
 	memset(&bss, 0, &endOfBinary - &bss);
 
-	printf("%s %c ITBA %d\n", "Arqui OS", '-', 2015);
+	printf("%s %c ITBA %x\n", "Arqui OS", '-', 2015);
 	startShell();
 
 	//Test if BSS is properly set up

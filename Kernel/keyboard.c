@@ -90,7 +90,7 @@ void setKey(unsigned char code)
 		addKey(key.asciiCode);
 }
 
-int addKey(unsigned char c)
+void addKey(unsigned char c)
 {
 	keyboard.buffer[keyboard.writeIndex++] = c;
 

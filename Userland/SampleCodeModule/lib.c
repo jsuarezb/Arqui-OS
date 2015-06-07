@@ -18,10 +18,10 @@ void putChar(char c)
 
 char getChar()
 {
-	// If keyboard buffer does not have any keys to send
-	// then return -1
 	char c = -1;
-	execSysCall(SYS_READ, STDIN, &c, 1);
+	while(c == -1)
+		execSysCall(SYS_READ, STDIN, &c, 1);
+
 	return c;
 }
 
@@ -55,7 +55,7 @@ void vprintf(char* s, va_list vl) {
    			} else if (nextChar == 'd') {
 				iAux = va_arg(vl, int);
 				char istring[int_length(iAux)];
-				to_s(iAux, istring);
+				itos(iAux, 10, istring);
 				putString(istring);
 				i++;
    			} else if (nextChar == 'c') {
@@ -68,8 +68,8 @@ void vprintf(char* s, va_list vl) {
 				i++;
    			} else if (nextChar == 'x') { 
    				iAux = va_arg(vl, int);
-   				char* hex[int_length(i)];
-   				to_hex( i, hex );
+   				char hex[int_length(i)];
+   				itos(iAux, 16, hex);
    				putString(hex);
    				i++;
    			} else {
@@ -80,6 +80,40 @@ void vprintf(char* s, va_list vl) {
 
 		}
 	}
+}
+
+int scanf(const char * format, ...)
+{
+	char buffer[81];
+	char c;
+	int count, readIndex = 0;
+	va_list vl;
+	va_start(vl, format);
+
+	// We want to write every scanned character
+	while ((c = getChar()) != '\n') {
+		if (c == '\b') {
+			if (readIndex - 1 >= 0) {
+				buffer[readIndex] = '\0';
+				putChar(c);
+				readIndex--;
+			}
+		} else {
+			buffer[readIndex] = c;
+
+			if (readIndex + 1 > 80)
+				putChar('\b');
+			else
+				readIndex++;
+
+			putChar(c);
+		}
+	}
+	putChar('\n');
+
+	count = vsscanf(buffer, format, vl);
+	va_end(vl);
+	return count;
 }
 
 int sscanf(const char * source, const char * format, ...) 
@@ -182,31 +216,23 @@ void concat(char * first, char * second, char * to)
 }
 
 // to = placeHolder
-void to_s ( int f, char* to )
+void itos (int i, int base, char * to)
 {
-    char const digits[] = "0123456789";
-	int aux = f;
+	char const digits[] = "0123456789ABCDEF";
+	int aux = i;
 
 	do {
+		aux /= base;
 		to++;
-		aux = aux / 10;
-	} while ( aux != 0 );
-	
-	*to = '\0';
-	to--;
-	int digit = f;
-	
-	do {
-		digit = f % 10;
-		f /= 10;
-		*to = digits[digit%10];
-		to--;
-	} while ( f != 0 );
-}
+	} while (aux > 0);
 
-void to_c (int i, char* to ) {
-	to[0] = (char) i;
-	to[1] = '\0';
+	*to = '\0';
+
+	do {
+		to--;
+		*to = digits[i % base];
+		i /= base;
+	} while (i > 0);
 }
 
 /*
@@ -264,13 +290,7 @@ int strcmp(const char * str1, const char * str2)
 	return *str1 - *str2;
 }
 
-void to_hex ( int i, char* to) {
-	int c = 0;
-	char const digits[] = "0123456789ABCDEF";
-	do {
-		to[c] = digits[i%16];
-		i = i / 16;
-		c++;
-	} while ( i != 0 );
-	to[c] = '\0';
+int isDigit ( int n )
+{
+	return (n - '0' >= 0 && n - '0' <= 9);
 }

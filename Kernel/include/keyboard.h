@@ -5,7 +5,7 @@
 
 void setKey(unsigned char code);
 void KBDinitialize();
-int addKey(unsigned char c);
+void addKey(unsigned char c);
 unsigned char getKey();
 int isLetter(unsigned char c);
 int isBufferEmpty();
