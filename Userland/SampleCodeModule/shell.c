@@ -94,9 +94,10 @@ void parseCommand(const char * line)
 		getTime();
 	} else if (strcmp(command, SET_SCREENSAVER_COMMAND) == 0) {
 		int seconds = 0;
-		if (sscanf(args, "%d", &seconds) > 0 && seconds > 0)
+		if (sscanf(args, "%d", &seconds) > 0 && seconds > 0) {
 			setScreensaver(seconds);
-
+		} else
+			printf("Invalid argument\n");
 	} else {
 		printf("Command not found.\n");
 	}
@@ -229,4 +230,5 @@ static void getTime()
 static void setScreensaver(int seconds)
 {
 	execSysCall(SYS_SCREENSAVER, seconds, 0, 0);
+	printf("Screensaver timeout set to %d seconds\n", seconds);
 }

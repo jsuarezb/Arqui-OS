@@ -178,10 +178,18 @@ int vsscanf(const char * s, const char * f, va_list vl)
 
 					count++;
 				} else {
-					break;
+					return count;
 				}
-			} 
-			// else do nothing, it's a '%' alone
+			} else {
+				while (*s == ' ')
+					s++;
+
+				if (*s != '%')
+					return count;
+				s++;
+				if (*s != *f)
+					return count;
+			}
 
 		} else { // Normal character
 			// Read until first non space character
@@ -190,7 +198,7 @@ int vsscanf(const char * s, const char * f, va_list vl)
 
 			// At the first non equal set of characters, end function
 			if (*s != *f) {
-				break;
+				return count;
 			} else {
 				s++;
 				f++;
@@ -240,14 +248,19 @@ void itos (int i, int base, char * to)
  */
 int cindex(char c, const char * str)
 {
-	int i = -1;
+	int i = 0, found = 0;
 
-	while (str[++i] != '\0') {
-		if (c == str[i])
+	while (*str != '\0') {
+		if (*str == c) {
+			found = 1;
 			break;
+		}
+
+		str++;
+		i++;
 	}
 
-	return i;
+	return (found > 0) ? i : -1;
 }
 
 /*
