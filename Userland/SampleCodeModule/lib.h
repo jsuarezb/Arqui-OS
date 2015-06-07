@@ -17,6 +17,11 @@ char getChar();
 void printf(char * fmt, ...);
 
 /*
+ * Scans from std input specified fmt
+ */
+int scanf(const char * fmt, ...);
+
+/*
  * Stores the extracted values from `src` formatted as `fmt`
  */
 int sscanf(const char * src, const char * fmt, ...);

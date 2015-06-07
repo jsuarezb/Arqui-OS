@@ -18,10 +18,10 @@ void putChar(char c)
 
 char getChar()
 {
-	// If keyboard buffer does not have any keys to send
-	// then return -1
 	char c = -1;
-	execSysCall(SYS_READ, STDIN, &c, 1);
+	while(c == -1)
+		execSysCall(SYS_READ, STDIN, &c, 1);
+
 	return c;
 }
 
@@ -76,7 +76,38 @@ void vprintf(char* s, va_list vl) {
 	}
 }
 
-// TODO: implementar scanf(const char * fmt, ...)
+int scanf(const char * format, ...)
+{
+	char buffer[81];
+	char c;
+	int count, readIndex = 0;
+	va_list vl;
+	va_start(vl, format);
+
+	while ((c = getChar()) != '\n') {
+		if (c == '\b') {
+			if (readIndex - 1 >= 0) {
+				buffer[readIndex] = '\0';
+				putChar(c);
+				readIndex--;
+			}
+		} else {
+			buffer[readIndex] = c;
+
+			if (readIndex + 1 > 80)
+				putChar('\b');
+			else
+				readIndex++;
+
+			putChar(c);
+		}
+	}
+	putChar('\n');
+
+	count = vsscanf(buffer, format, vl);
+	va_end(vl);
+	return count;
+}
 
 int sscanf(const char * source, const char * format, ...) 
 {
@@ -263,68 +294,4 @@ int strcmp(const char * str1, const char * str2)
 int isDigit ( int n )
 {
 	return (n - '0' >= 0 && n - '0' <= 9);
-}
-
-int getInteger(int * integer)
-{
-	char c;
-	int digits = 0;
-	int sum = number = 0;
-
-	while(number){
-		c = getchar();
-		if( isDigit(c) ){
-			digits++;
-			res = res*10 + (c-'0');
-		}
-		else{
-			isnum=0;
-		}
-	}
-	*integer = sum;
-	return digits;
-}
-
-int scanf(const char *format, ...) 
-{
-	int *args = (int *)(&format + sizeof(*format));
-	int read = 0;
-	char c;
-	int n;
-	int digits;
-	while(*format) {
-		switch(*format) {
-			case '%':
-				format++;
-				switch(*format) {
-					case 'd':
-						digits = getInteger( (int*)*args );
-						read++;
-						args = args;
-						break;
-					case 's':
-						n = execSysCall(SYS_READ, STDIN, args, 1);
-						// tengo que poner el /0?
-						args++;
-						return read+1;
-					case 'c':
-						c = getChar();
-						*((char *)*args) = c;
-						args++;
-						read++;
-						break;
-					default:
-						// leemos un solo caracter?			
-				}
-				break;
-			default:
-				// compara el formato con el caracter leido
-				c = getChar();
-				if( *format != c ) {
-					return read;
-				}
-		}
-		format++;
-	}	
-	return read;
 }

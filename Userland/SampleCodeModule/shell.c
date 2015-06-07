@@ -45,6 +45,7 @@ void startShell()
 	while (1) {
 		// Keep waiting till there's a key to read
 		c = getChar();
+		
 		switch (c) {
 			case '\n':
 				putChar(c);
@@ -56,8 +57,6 @@ void startShell()
 					shellBuffer[bufferIndex--] = 0;
 					putChar(c);
 				}
-				break;
-			case -1:
 				break;
 			default:
 				if (bufferIndex == COMMAND_LINE_SIZE) {
@@ -119,36 +118,38 @@ static void clearBuffer(void)
  */
 static void help()
 {
-	int opt;
+	int opt = 0;
 	printf("Hi, I'm help, available commands:\n");
 	printf("Please select your option\n");
 	printf("0 - GET TIME\n");
 	printf("1 - SET TIME\n");
-	printf("1 - SET SCREENSAVER TIME\n");
+	printf("2 - SET SCREENSAVER TIME\n");
 
-	// TODO: usar scanf en vez de sscanf (hay que implementar scanf) 
-	// sscanf("%d",opt);
+	if (scanf("%d\n", &opt) == 0 || opt > 2) {
+		printf("Invalid option\n");
+		return;
+	}
 
-	// switch(opt){
-	// 	case GET_DATE:
-	// 		printf("GET DATE:\n");
-	// 		printf("Command: time\n");
-	// 		printf("Display the current date and time in the following format: YYYY/MM/DD HH:MM:SS\n");
-	// 		break;
-	// 	case SET_DATE:
-	// 		printf("SET DATE:\n");
-	// 		printf("Command: stime\n");
-	// 		printf("Set the system current date and time\n");
-	// 		break;
-	// 	case SET_SCREENSAVER:
-	// 		printf("SET SCREENSAVER TIME:\n");
-	// 		printf("Command: ss n\n");
-	// 		printf("** n is the timeout period in seconds **\n");
-	// 		printf("Set the scrensaver timeout period\n");
-	// 		break;
-	// 	default:
-	// 		printf("Invalid command.\n");
-	// }
+	switch(opt){
+		case GET_DATE:
+			printf("GET DATE:\n");
+			printf("Command: time\n");
+			printf("Display the current date and time in the following format: YYYY/MM/DD HH:MM:SS\n");
+			break;
+		case SET_DATE:
+			printf("SET DATE:\n");
+			printf("Command: stime\n");
+			printf("Set the system current date and time\n");
+			break;
+		case SET_SCREENSAVER:
+			printf("SET SCREENSAVER TIME:\n");
+			printf("Command: ss n\n");
+			printf("** n is the timeout period in seconds **\n");
+			printf("Set the scrensaver timeout period\n");
+			break;
+		default:
+			printf("Invalid command.\n");
+	}
 }
 
 // TODO: usar scanf en vez de sscanf
