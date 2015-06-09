@@ -110,7 +110,6 @@ int scanf(const char * format, ...)
 		}
 	}
 	putChar('\n');
-	getChar();
 	count = vsscanf(buffer, format, vl);
 	va_end(vl);
 	return count;
