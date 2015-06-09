@@ -9,7 +9,10 @@
 #include "define.h"
 #include "libasm.h"
 
-#include <stdarg.h>		
+#include <stdarg.h>
+
+static void vprintf(char* s, va_list vl);
+static int vsscanf(const char * s, const char * f, va_list vl);
 
 void putChar(char c) 
 {
@@ -41,7 +44,7 @@ void printf(char * s, ...)
 	va_end(vl);
 }
 
-void vprintf(char* s, va_list vl) {
+static void vprintf(char* s, va_list vl) {
 	char nextChar, cAux;
 	char * sAux;
    	int i, iAux;
@@ -126,7 +129,7 @@ int sscanf(const char * source, const char * format, ...)
 	return count;
 }
 
-int vsscanf(const char * s, const char * f, va_list vl)
+static int vsscanf(const char * s, const char * f, va_list vl)
 {
 	int i, count = 0;
 	char * strBuffer;

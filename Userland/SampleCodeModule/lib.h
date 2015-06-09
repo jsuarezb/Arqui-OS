@@ -27,9 +27,9 @@ int scanf(const char * fmt, ...);
 int sscanf(const char * src, const char * fmt, ...);
 
 /*
- * Writes an int in its string representation on `to`
+ * Stores int `i` representation on base `base` into `placeholder`
  */
-void to_s(int f, char * to);
+void itos(int i, int base, char * placeholder);
 
 /*
  * Concats two strings and writes the concatenation on `to`
@@ -55,5 +55,6 @@ int int_length ( int i );
 int strlen ( char* s );
 void to_c (int i, char* to );
 void to_hex( int i, char* to);
+int stoi(const char * str);
 
 #endif
