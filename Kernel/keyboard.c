@@ -73,8 +73,9 @@ void setKey(unsigned char code)
 		default:
 			if (!(code & 0x80)) {
 				key.shown = TRUE;
-				if ((isLetter(code) && keyboard.capsEnabled && !keyboard.shiftEnabled) || 
-							(!keyboard.capsEnabled && keyboard.shiftEnabled)) {
+				if ((isLetter(code) && keyboard.capsEnabled && !keyboard.shiftEnabled)
+						|| (!keyboard.capsEnabled && keyboard.shiftEnabled)
+						|| (!isLetter(code) && keyboard.capsEnabled && keyboard.shiftEnabled)) {
 					state = UPPERCASE;
 				}
 			}				
