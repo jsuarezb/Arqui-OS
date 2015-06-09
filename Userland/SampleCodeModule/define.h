@@ -10,7 +10,7 @@
 #define SYS_SCREENSAVER	0x20
 #define SYS_CPUVENDOR	0x24
 
-#define COMMAND_LINE_SIZE	76
+#define COMMAND_LINE_SIZE	77
 #define GET_DATE			0
 #define SET_DATE			1
 #define SET_SCREENSAVER		2

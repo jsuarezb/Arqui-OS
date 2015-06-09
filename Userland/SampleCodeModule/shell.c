@@ -51,12 +51,17 @@ void startShell()
 				break;
 			case '\b':
 				if (bufferIndex > 0) {
-					shellBuffer[bufferIndex--] = 0;
 					putChar(c);
+					shellBuffer[bufferIndex] = '\0';
+					bufferIndex--;
+				} else {
+					bufferIndex = 0;
+					shellBuffer[0] = '\0';
 				}
+
 				break;
 			default:
-				if (bufferIndex == COMMAND_LINE_SIZE) {
+				if (bufferIndex == COMMAND_LINE_SIZE - 1) {
 					putChar('\b');
 					bufferIndex--;
 				}
