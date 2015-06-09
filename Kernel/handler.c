@@ -62,6 +62,9 @@ void syscallHandler(uint64_t code, uint64_t arg1, uint64_t arg2, uint64_t arg3)
 			break;
 		case SYS_SCREENSAVER:
 			setScreensaverTime((int) arg1);
+		//case SYS_CPUVENDOR:
+		//	cpuVendor(arg1);
+		//	break;
 		default:
 			break;
 	}

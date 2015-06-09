@@ -6,5 +6,6 @@ signed int write(unsigned int fd, const char * buf, int count);
 void getRTC(date * current_date);
 void setRTC(date * set_time);
 void BCDtoBinary(date * date);
+void BinaryToBCD(date * date);
 
 #endif
