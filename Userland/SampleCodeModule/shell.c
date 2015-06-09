@@ -153,7 +153,6 @@ static void help()
 	}
 }
 
-// TODO: usar scanf en vez de sscanf
 static void setTime()
 {
 	uint8_t hour, minute, second, year, day, month;
