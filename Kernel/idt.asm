@@ -3,8 +3,6 @@ GLOBAL _irq01handler
 GLOBAL _int80handler
 GLOBAL _sti
 GLOBAL _cli
-GLOBAL _in_io
-GLOBAL _out_io
 GLOBAL picMasterMask
 GLOBAL picSlaveMask
 

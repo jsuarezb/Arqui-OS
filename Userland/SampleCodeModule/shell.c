@@ -3,11 +3,6 @@
 #include "lib.h"
 #include "shell.h"
 
-#define COMMAND_LINE_SIZE	76
-#define GET_DATE			0
-#define SET_DATE			1
-#define SET_SCREENSAVER		2
-
 char shellBuffer[COMMAND_LINE_SIZE] = {0};
 int bufferIndex = 0;
 
@@ -35,6 +30,8 @@ static void getTime();
  * Set screensaver wait time
  */
 static void setScreensaver(int seconds);
+
+static void getCpuVendor();
 
 void startShell()
 {
@@ -98,10 +95,9 @@ void parseCommand(const char * line)
 			setScreensaver(seconds);
 		} else
 			printf("Invalid argument\n");
-	} else ///if if (strcmp(command, GET_CPU_VENDRO) == 0) {
-		//getCpuVendor();
-	//} else
-	{
+	} else if (strcmp(command, GET_CPU_VENDOR_COMMAND) == 0) {
+		getCpuVendor();
+	} else {
 		printf("Command not found.\n");
 	}
 
@@ -128,9 +124,9 @@ static void help()
 	printf("0 - GET TIME\n");
 	printf("1 - SET TIME\n");
 	printf("2 - SET SCREENSAVER TIME\n");
-	//printf("3 - GET CPU VENDOR\n");
+	printf("3 - GET CPU VENDOR\n");
 
-	if (scanf("%d\n", &opt) == 0 || opt > 2) {
+	if (scanf("%d", &opt) == 0 || opt > 3) {
 		printf("Invalid option\n");
 		return;
 	}
@@ -152,10 +148,11 @@ static void help()
 			printf("** n is the timeout period in seconds **\n");
 			printf("Set the scrensaver timeout period\n");
 			break;
-		//case SET_CPUVENDOR:
-		//	printf("GET CPU VENDOR:\n");
-		//	printf("Display the CPU's manufacturer ID string\n");
-		//	break;
+		case GET_CPU_VENDOR:
+			printf("GET CPU VENDOR:\n");
+			printf("Command: cpuid\n");
+			printf("Display the CPU's manufacturer ID string\n");
+			break;
 		default:
 			printf("Invalid command.\n");
 	}
@@ -221,8 +218,10 @@ static void setScreensaver(int seconds)
 	printf("Screensaver timeout set to %d seconds\n", seconds);
 }
 
-//static void getCpuVendor() 
-//{
-//	char * vendor;
-//	execSysCall(SYS_CPUVENDOR, vendor, 0, 0);
-//}
+static void getCpuVendor() 
+{
+	char vendor[13];
+	execSysCall(SYS_CPUVENDOR, vendor, 0, 0);
+	vendor[12] = '\0';
+	printf("%s\n", vendor);
+}
