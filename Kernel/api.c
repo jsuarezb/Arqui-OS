@@ -55,6 +55,7 @@ void getRTC(date * current_date)
 
 void setRTC(date * set_time)
 {
+	BinaryToBCD(set_time);
 	set_date(SECOND, set_time->second);
 	set_date(MINUTE, set_time->minute);
 	set_date(HOUR, set_time->hour);
@@ -72,3 +73,11 @@ void BCDtoBinary(date * date) {
 	date->hour = (date->hour & 0x0F) + ((date->hour / 16) * 10);
 }
 
+void BinaryToBCD(date * date) {
+	date->day = ((((date->day) / 10) * 16) | (date->day % 10));
+	date->month = ((((date->month) / 10) * 16) | (date->month % 10));
+	date->year = ((((date->year) / 10) * 16) | (date->year % 10));
+	date->second = ((((date->second) / 10) * 16) | (date->second % 10));
+	date->minute = ((((date->minute) / 10) * 16) | (date->minute % 10));
+	date->hour = ((((date->hour) / 10) * 16) | (date->hour % 10));
+}

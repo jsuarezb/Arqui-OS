@@ -3,11 +3,6 @@
 #include "lib.h"
 #include "shell.h"
 
-#define COMMAND_LINE_SIZE	76
-#define GET_DATE			0
-#define SET_DATE			1
-#define SET_SCREENSAVER		2
-
 char shellBuffer[COMMAND_LINE_SIZE] = {0};
 int bufferIndex = 0;
 
@@ -36,6 +31,8 @@ static void getTime();
  */
 static void setScreensaver(int seconds);
 
+static void getCpuVendor();
+
 void startShell()
 {
 	char c;
@@ -45,7 +42,7 @@ void startShell()
 	while (1) {
 		// Keep waiting till there's a key to read
 		c = getChar();
-		
+
 		switch (c) {
 			case '\n':
 				putChar(c);
@@ -98,6 +95,8 @@ void parseCommand(const char * line)
 			setScreensaver(seconds);
 		} else
 			printf("Invalid argument\n");
+	} else if (strcmp(command, GET_CPU_VENDOR_COMMAND) == 0) {
+		getCpuVendor();
 	} else {
 		printf("Command not found.\n");
 	}
@@ -125,8 +124,9 @@ static void help()
 	printf("0 - GET TIME\n");
 	printf("1 - SET TIME\n");
 	printf("2 - SET SCREENSAVER TIME\n");
+	printf("3 - GET CPU VENDOR\n");
 
-	if (scanf("%d\n", &opt) == 0 || opt > 2) {
+	if (scanf("%d", &opt) == 0 || opt > 3) {
 		printf("Invalid option\n");
 		return;
 	}
@@ -148,6 +148,11 @@ static void help()
 			printf("** n is the timeout period in seconds **\n");
 			printf("Set the scrensaver timeout period\n");
 			break;
+		case GET_CPU_VENDOR:
+			printf("GET CPU VENDOR:\n");
+			printf("Command: cpuid\n");
+			printf("Display the CPU's manufacturer ID string\n");
+			break;
 		default:
 			printf("Invalid command.\n");
 	}
@@ -155,46 +160,20 @@ static void help()
 
 static void setTime()
 {
-	uint8_t hour, minute, second, year, day, month;
+	int hour = 0, minute = 0, second = 0;
+	int year = 1, day = 0, month = 0;
 	date current_date;
+	int error = 0;
 
-	// -------------------- YEAR ---------------- //
-	printf("Enter year:\n");
+	printf("Enter date in this format: YY MM DD HH MM SS\n");
 	do {
-		scanf("%d", &year);
-	} while ( year < 0 );
-
-	// -------------------- MONTH ---------------- //
-	printf("Enter months:\n");
-	do {
-		scanf("%d", &month);
-	} while (month < 0 || month > 12);
+		scanf("%d %d %d %d %d %d", &year, &month, &day, &hour, &minute, &second);
+		if (year <= 0  || year > 99 || month <= 0 || day <= 0 || day > 31 || month > 12 || hour < 0 || hour > 23 || minute < 0 || minute > 50 || second < 0 || second > 59){
+			printf("Invalid Format\n");
+		}
+	} while ( year <= 0 || year > 99 || month <= 0 || day <= 0 || day > 31 || month > 12 || hour < 0 || hour > 23 || minute < 0 || minute > 50 || second < 0 || second > 59);
 	
-	
-	// -------------------- DAY ---------------- //
-	printf("Enter days:\n");
-	do {
-		scanf("%d", &day);
-	} while (day < 0 || day > 31);
-	
-	// -------------------- HOUR ---------------- //
-	printf("Enter hours:\n");
-	do {
-		scanf("%d", &hour);
-	} while (hour < 0 || hour > 23);
-
-	// -------------------- MINUTE ---------------- //
-	printf("Enter minutes:\n");
-	do {
-		scanf("%d", &minute);
-	} while (minute < 0 || minute > 59);
-
-	// -------------------- SECOND ---------------- //
-	printf("Enter seconds:\n");
-	do {
-		scanf("%d", &second);
-	} while (second < 0 || second > 59);
-
+	printf("day: %d\n", day);
 	current_date.hour = hour;
 	current_date.minute = minute;
 	current_date.second = second;
@@ -202,13 +181,20 @@ static void setTime()
 	current_date.month = month;
 	current_date.year = year;
 
+	printStruct(&current_date);
+
 	execSysCall(SYS_STIME, &current_date, 1, 1);
 	printf("Complete.\n");
+	getTime();
 }
 
-static int validateDayMonth(uint8_t day, uint8_t month){
-
-	// validar meses de 31 y 30 dias
+void printStruct ( date * current_date ){
+	printf("Seconds: %d\n", current_date->second);
+	printf("Minutes: %d\n", current_date->minute);
+	printf("Hours: %d\n", current_date->hour);
+	printf("Day: \n", current_date->day);
+	printf("Month: \n", current_date->month);
+	printf("Year: %d\n", current_date->year);
 }
 
 static void getTime()
@@ -230,4 +216,12 @@ static void setScreensaver(int seconds)
 {
 	execSysCall(SYS_SCREENSAVER, seconds, 0, 0);
 	printf("Screensaver timeout set to %d seconds\n", seconds);
+}
+
+static void getCpuVendor() 
+{
+	char vendor[13];
+	execSysCall(SYS_CPUVENDOR, vendor, 0, 0);
+	vendor[12] = '\0';
+	printf("%s\n", vendor);
 }
