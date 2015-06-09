@@ -161,7 +161,6 @@ static void help()
 	}
 }
 
-// TODO: usar scanf en vez de sscanf
 static void setTime()
 {
 	int hour = 0, minute = 0, second = 0;
