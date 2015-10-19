@@ -5,6 +5,7 @@
 #include "include/api.h"
 #include "include/screensaver.h"
 #include "include/handler.h"
+#include "include/cpuvendor.h"
 
 extern unsigned int tickCount;
 extern unsigned int showingScreensaver;
@@ -17,10 +18,10 @@ extern unsigned int timer;
 void timertickHandler()
 {
 	if (timer == 0) { // Screensaver state
-		if (!showingScreensaver) { 
+		if (!showingScreensaver) {
 			// If it's not showing the screensaver yet
 			startScreensaver();
-		} else { 
+		} else {
 			// If it's already showing it
 			tickScreensaver();
 		}
@@ -36,8 +37,8 @@ void keyboardHandler(unsigned char c)
 {
 	timer = timerLimit;
 	if (showingScreensaver) {
-		stopScreensaver();			
-	}	
+		stopScreensaver();
+	}
 
 	setKey(c);
 }

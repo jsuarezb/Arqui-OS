@@ -2,6 +2,7 @@
 #include "define.h"
 #include "lib.h"
 #include "shell.h"
+#include "libasm.h"
 
 char shellBuffer[COMMAND_LINE_SIZE] = {0};
 int bufferIndex = 0;
@@ -163,12 +164,20 @@ static void help()
 	}
 }
 
+static void printStruct ( date * current_date ){
+	printf("Seconds: %d\n", current_date->second);
+	printf("Minutes: %d\n", current_date->minute);
+	printf("Hours: %d\n", current_date->hour);
+	printf("Day: \n", current_date->day);
+	printf("Month: \n", current_date->month);
+	printf("Year: %d\n", current_date->year);
+}
+
 static void setTime()
 {
 	int hour = 0, minute = 0, second = 0;
 	int year = 1, day = 0, month = 0;
 	date current_date;
-	int error = 0;
 
 	printf("Enter date in this format: YY MM DD HH MM SS\n");
 	do {
@@ -177,7 +186,7 @@ static void setTime()
 			printf("Invalid Format\n");
 		}
 	} while ( year <= 0 || year > 99 || month <= 0 || day <= 0 || day > 31 || month > 12 || hour < 0 || hour > 23 || minute < 0 || minute > 50 || second < 0 || second > 59);
-	
+
 	printf("day: %d\n", day);
 	current_date.hour = hour;
 	current_date.minute = minute;
@@ -188,24 +197,15 @@ static void setTime()
 
 	printStruct(&current_date);
 
-	execSysCall(SYS_STIME, &current_date, 1, 1);
+	execSysCall(SYS_STIME, (uint64_t) &current_date, 1, 1);
 	printf("Complete.\n");
 	getTime();
-}
-
-void printStruct ( date * current_date ){
-	printf("Seconds: %d\n", current_date->second);
-	printf("Minutes: %d\n", current_date->minute);
-	printf("Hours: %d\n", current_date->hour);
-	printf("Day: \n", current_date->day);
-	printf("Month: \n", current_date->month);
-	printf("Year: %d\n", current_date->year);
 }
 
 static void getTime()
 {
 	date current_date;
-	execSysCall(SYS_TIME, &current_date, 1, 1);
+	execSysCall(SYS_TIME, (uint64_t) &current_date, 1, 1);
 	printf(
 		"Current date and time: %d/%d/%d %d:%d:%d\n",
 		current_date.year,
@@ -223,10 +223,10 @@ static void setScreensaver(int seconds)
 	printf("Screensaver timeout set to %d seconds\n", seconds);
 }
 
-static void getCpuVendor() 
+static void getCpuVendor()
 {
 	char vendor[13];
-	execSysCall(SYS_CPUVENDOR, vendor, 0, 0);
+	execSysCall(SYS_CPUVENDOR, (uint64_t) vendor, 0, 0);
 	vendor[12] = '\0';
 	printf("%s\n", vendor);
 }
